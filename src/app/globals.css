@@ -1,0 +1,121 @@
+@import "tailwindcss";
+@config "../../tailwind.config.js";
+
+:root {
+  --font-serif:
+    "Baskerville", "Libre Baskerville", Georgia, "Times New Roman", serif;
+  --font-sans: "Manrope", "Inter", "Avenir Next", "Segoe UI", Arial, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
+body {
+  margin: 0;
+  overflow-x: hidden;
+  background: #f7f2e9;
+  color: #171b14;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.6;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+main {
+  overflow: hidden;
+}
+
+@layer components {
+  .btn {
+    min-height: 2.45rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    padding: 0.64rem 1.05rem;
+    border: 1px solid transparent;
+    font-size: 0.75rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition:
+      background-color 220ms ease,
+      color 220ms ease,
+      border-color 220ms ease,
+      opacity 220ms ease,
+      transform 220ms ease;
+  }
+
+  .btn:hover {
+    transform: translateY(-1px);
+  }
+
+  .btn-primary {
+    background: #171b14;
+    color: #fff;
+  }
+
+  .btn-primary:hover {
+    background: #8e8456;
+  }
+
+  .btn-accent {
+    background: #8e8456;
+    color: #fff;
+  }
+
+  .btn-accent:hover {
+    background: #171b14;
+  }
+
+  .btn-secondary {
+    border-color: rgb(23 27 20 / 0.16);
+    color: #171b14;
+  }
+
+  .btn-secondary:hover {
+    border-color: rgb(23 27 20 / 0.36);
+  }
+
+  .btn-light {
+    border-color: rgb(255 255 255 / 0.24);
+    color: #fff;
+  }
+
+  .btn-light:hover {
+    border-color: rgb(255 255 255 / 0.52);
+  }
+
+  .btn-link {
+    min-height: auto;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: transparent;
+  }
+}

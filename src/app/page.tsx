@@ -59,7 +59,7 @@ export default function HomePage() {
           <h1 className="mb-5 text-[0.8rem] font-black uppercase tracking-[0.22em] text-white/80">
             Casa Aurea
           </h1>
-          <h2 className="font-serif text-4xl font-normal md:text-[4.7rem] 2xl:text-[6rem] fxl:text-[5rem]">
+          <h2 className="font-serif text-5xl font-normal md:text-[4.7rem] 2xl:text-[6rem] fxl:text-[5rem]">
             La tua prossima
             <br />
             vacanza comincia da qui.

@@ -3,7 +3,11 @@ export type AvailabilityState = "available" | "unavailable" | "request";
 export type Accommodation = {
   slug: string;
   name: string;
-  type: "Casa vacanza" | "Villa in affitto" | "Appartamento vacanze" | "Camera boutique";
+  type:
+    | "Casa vacanza"
+    | "Villa in affitto"
+    | "Appartamento vacanze"
+    | "Camera boutique";
   claim: string;
   summary: string;
   description: string;
@@ -25,7 +29,9 @@ export type Accommodation = {
     longitude: number;
   };
   matchProfile: {
-    experiences: Array<"mare" | "centro-storico" | "relax" | "famiglia" | "food" | "natura">;
+    experiences: Array<
+      "mare" | "centro-storico" | "relax" | "famiglia" | "food" | "natura"
+    >;
     view: "mare" | "giardino" | "centro" | "campagna";
     hasPool: boolean;
     petsAllowed: boolean;
@@ -41,8 +47,8 @@ export type Accommodation = {
 
 export const accommodations: Accommodation[] = [
   {
-    slug: "villa-aurora-con-piscina",
-    name: "Villa Aurora con Piscina",
+    slug: "villa-aurora",
+    name: "Villa Aurora",
     type: "Villa in affitto",
     claim: "Privacy, piscina e tramonti morbidi tra ulivi e mare.",
     summary:
@@ -57,30 +63,46 @@ export const accommodations: Accommodation[] = [
     priceFrom: 320,
     availability: "available",
     externalBookingUrl: "https://www.airbnb.com",
-    featuredImage:
-      "/images/courtyard-pool.png",
+    featuredImage: "/images/courtyard-pool.png",
     gallery: [
       "/images/hero-pool-sea.png",
       "/images/kitchen-sea.png",
-      "/images/stone-bath.png"
+      "/images/stone-bath.png",
     ],
-    amenities: ["Piscina privata", "Wi-Fi fibra", "Aria condizionata", "Parcheggio", "Cucina attrezzata", "Barbecue"],
-    extras: ["Chef privato", "Transfer aeroporto", "Noleggio bici", "Spesa in villa"],
-    rules: ["Check-in dalle 16:00", "Check-out entro le 10:00", "Non sono ammessi eventi", "Animali su richiesta"],
+    amenities: [
+      "Piscina privata",
+      "Wi-Fi fibra",
+      "Aria condizionata",
+      "Parcheggio",
+      "Cucina attrezzata",
+      "Barbecue",
+    ],
+    extras: [
+      "Chef privato",
+      "Transfer aeroporto",
+      "Noleggio bici",
+      "Spesa in villa",
+    ],
+    rules: [
+      "Check-in dalle 16:00",
+      "Check-out entro le 10:00",
+      "Non sono ammessi eventi",
+      "Animali su richiesta",
+    ],
     coordinates: { latitude: 36.891, longitude: 15.069 },
     matchProfile: {
       experiences: ["relax", "famiglia", "natura", "food"],
       view: "campagna",
       hasPool: true,
       petsAllowed: true,
-      proximity: ["natura", "centro"]
+      proximity: ["natura", "centro"],
     },
     externalCalendar: {
       provider: "ical",
       syncEnabled: false,
       calendarUrl: "",
-      lastSync: undefined
-    }
+      lastSync: undefined,
+    },
   },
   {
     slug: "appartamento-scirocco-centro-storico",
@@ -99,34 +121,50 @@ export const accommodations: Accommodation[] = [
     priceFrom: 145,
     availability: "request",
     externalBookingUrl: "https://www.booking.com",
-    featuredImage:
-      "/images/suite-sea-bedroom.png",
+    featuredImage: "/images/suite-sea-bedroom.png",
     gallery: [
       "/images/suite-sea-bedroom.png",
       "/images/vaulted-living.png",
-      "/images/stone-bath.png"
+      "/images/stone-bath.png",
     ],
-    amenities: ["Wi-Fi", "Aria condizionata", "Smart TV", "Cucina", "Lavatrice", "Self check-in"],
-    extras: ["Colazione partner", "Tour guidati", "Late check-out", "Degustazioni"],
-    rules: ["Check-in dalle 15:00", "Check-out entro le 10:30", "No fumo", "Silenzio dopo le 23:00"],
+    amenities: [
+      "Wi-Fi",
+      "Aria condizionata",
+      "Smart TV",
+      "Cucina",
+      "Lavatrice",
+      "Self check-in",
+    ],
+    extras: [
+      "Colazione partner",
+      "Tour guidati",
+      "Late check-out",
+      "Degustazioni",
+    ],
+    rules: [
+      "Check-in dalle 15:00",
+      "Check-out entro le 10:30",
+      "No fumo",
+      "Silenzio dopo le 23:00",
+    ],
     coordinates: { latitude: 36.889, longitude: 15.073 },
     matchProfile: {
       experiences: ["centro-storico", "food"],
       view: "centro",
       hasPool: false,
       petsAllowed: false,
-      proximity: ["centro"]
+      proximity: ["centro"],
     },
     externalCalendar: {
       provider: "airbnb",
       syncEnabled: false,
       calendarUrl: "",
-      lastSync: undefined
-    }
+      lastSync: undefined,
+    },
   },
   {
-    slug: "casa-vacanza-maestrale-vista-mare",
-    name: "Casa Maestrale Vista Mare",
+    slug: "casa-vacanza-maestrale",
+    name: "Casa Maestrale",
     type: "Casa vacanza",
     claim: "Terrazza vista mare per giornate semplici e luminose.",
     summary:
@@ -141,31 +179,42 @@ export const accommodations: Accommodation[] = [
     priceFrom: 210,
     availability: "unavailable",
     externalBookingUrl: "https://www.lodgify.com",
-    featuredImage:
-      "/images/stone-entrance.png",
+    featuredImage: "/images/stone-entrance.png",
     gallery: [
       "/images/stone-entrance.png",
       "/images/breakfast-sea.png",
-      "/images/clear-cove.png"
+      "/images/clear-cove.png",
     ],
-    amenities: ["Terrazza vista mare", "Posto auto", "Doccia esterna", "Wi-Fi", "Lavastoviglie", "Climatizzazione"],
+    amenities: [
+      "Terrazza vista mare",
+      "Posto auto",
+      "Doccia esterna",
+      "Wi-Fi",
+      "Lavastoviglie",
+      "Climatizzazione",
+    ],
     extras: ["Ombrellone riservato", "Transfer", "Culla", "Pulizia extra"],
-    rules: ["Check-in dalle 16:00", "Check-out entro le 10:00", "No feste", "Raccolta differenziata obbligatoria"],
+    rules: [
+      "Check-in dalle 16:00",
+      "Check-out entro le 10:00",
+      "No feste",
+      "Raccolta differenziata obbligatoria",
+    ],
     coordinates: { latitude: 36.866, longitude: 15.118 },
     matchProfile: {
       experiences: ["mare", "famiglia", "relax", "natura"],
       view: "mare",
       hasPool: false,
       petsAllowed: true,
-      proximity: ["mare", "natura"]
+      proximity: ["mare", "natura"],
     },
     externalCalendar: {
       provider: "booking",
       syncEnabled: false,
       calendarUrl: "",
-      lastSync: undefined
-    }
-  }
+      lastSync: undefined,
+    },
+  },
 ];
 
 export function getAccommodation(slug: string) {

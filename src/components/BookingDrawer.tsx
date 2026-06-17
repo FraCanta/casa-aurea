@@ -9,11 +9,6 @@ import type { Accommodation } from "@/data/accommodations";
 
 type DrawerStatus = "idle" | "missing" | "available" | "unavailable" | "sent";
 
-const months = [
-  { label: "Giugno 2026", year: 2026, month: 5 },
-  { label: "Luglio 2026", year: 2026, month: 6 },
-];
-
 const weekdays = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
 
 export function BookingDrawer({
@@ -30,6 +25,7 @@ export function BookingDrawer({
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [status, setStatus] = useState<DrawerStatus>("idle");
+  const [calendarOffset, setCalendarOffset] = useState(0);
   const {
     selectedSlug: storedSlug,
     checkin,
@@ -41,8 +37,16 @@ export function BookingDrawer({
     setGuests,
     resetBooking,
   } = useBookingState();
+  const today = useMemo(() => new Date(), []);
+  const todayString = useMemo(() => toDateValue(today), [today]);
+  const months = useMemo(() => getUpcomingMonths(today, 12), [today]);
+  const mobileMonths = months.slice(calendarOffset, calendarOffset + 2);
+  const desktopMonths = months.slice(calendarOffset, calendarOffset + 3);
+  const canGoBack = calendarOffset > 0;
+  const canGoForward = calendarOffset < months.length - 2;
 
-  const activeSlug = selectedSlug || storedSlug || accommodations[0]?.slug || "";
+  const activeSlug =
+    selectedSlug || storedSlug || accommodations[0]?.slug || "";
 
   const selectedAccommodation = useMemo(
     () => accommodations.find((item) => item.slug === activeSlug),
@@ -63,6 +67,8 @@ export function BookingDrawer({
   }
 
   function selectDate(date: string) {
+    if (date < todayString) return;
+
     setStatus("idle");
 
     if (!checkin || (checkin && checkout) || date <= checkin) {
@@ -101,12 +107,20 @@ export function BookingDrawer({
     sent: "Richiesta pronta: quando collegherai booking engine o iCal, useremo gli stessi dati.",
   }[status];
 
+  function goToPreviousMonths() {
+    setCalendarOffset((value) => Math.max(0, value - 1));
+  }
+
+  function goToNextMonths() {
+    setCalendarOffset((value) => Math.min(months.length - 2, value + 1));
+  }
+
   return (
     <>
       <button
         type="button"
         onClick={openDrawer}
-        className="inline-flex cursor-pointer border-0 bg-transparent p-0 text-left text-inherit"
+        className="inline-flex p-0 text-left bg-transparent border-0 cursor-pointer text-inherit"
       >
         {trigger ?? <span className="btn btn-accent">Prenota ora</span>}
       </button>
@@ -128,41 +142,41 @@ export function BookingDrawer({
                 />
 
                 <motion.aside
-                  className="absolute inset-0 h-dvh overflow-y-auto bg-paper text-ink"
+                  className="absolute inset-0 overflow-y-auto h-dvh bg-paper text-ink"
                   initial={{ y: 24, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   exit={{ y: 24, opacity: 0 }}
                   transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <div className="border-b border-ink/10 px-5 py-4 md:hidden">
+                  <div className="px-5 py-4 border-b border-ink/10 md:hidden">
                     <div className="grid grid-cols-[44px_1fr_44px] items-center">
                       <button
                         type="button"
-                        className="grid h-10 w-10 place-items-center"
+                        className="grid w-10 h-10 place-items-center"
                         onClick={() => setOpen(false)}
                         aria-label="Chiudi"
                       >
                         <Icon icon="ph:x" className="text-xl" />
                       </button>
-                      <h2 className="text-center text-base font-bold">
+                      <h2 className="text-base font-bold text-center">
                         Seleziona date
                       </h2>
                     </div>
                   </div>
 
                   <div className="hidden px-8 py-7 md:block fxl:px-[140px]">
-                    <div className="mb-7 flex items-center justify-between">
+                    <div className="flex items-center justify-between mb-7">
                       <div>
                         <p className="text-[0.62rem] font-black uppercase tracking-[0.16em] text-olive">
                           Prenota il tuo soggiorno
                         </p>
-                        <h2 className="mt-2 font-serif text-[clamp(2.4rem,4vw,4.4rem)] leading-[1]">
+                        <h2 className="mt-2 font-serif text-[clamp(2.5rem,5vw,3.5rem)] leading-[1]">
                           Seleziona le date.
                         </h2>
                       </div>
                       <button
                         type="button"
-                        className="grid h-12 w-12 place-items-center border border-ink/15"
+                        className="grid w-12 h-12 border place-items-center border-ink/15"
                         onClick={() => setOpen(false)}
                         aria-label="Chiudi"
                       >
@@ -173,8 +187,10 @@ export function BookingDrawer({
                       <SearchField label="Dimora">
                         <select
                           value={activeSlug}
-                          onChange={(event) => setSelectedSlug(event.target.value)}
-                          className="w-full border-0 bg-transparent text-sm outline-none"
+                          onChange={(event) =>
+                            setSelectedSlug(event.target.value)
+                          }
+                          className="w-full text-sm bg-transparent border-0 outline-none"
                         >
                           {accommodations.map((item) => (
                             <option key={item.slug} value={item.slug}>
@@ -194,7 +210,7 @@ export function BookingDrawer({
                         <select
                           value={guests}
                           onChange={(event) => setGuests(event.target.value)}
-                          className="w-full border-0 bg-transparent text-sm outline-none"
+                          className="w-full text-sm bg-transparent border-0 outline-none"
                         >
                           <option value="2">2 ospiti</option>
                           <option value="4">4 ospiti</option>
@@ -204,7 +220,7 @@ export function BookingDrawer({
                       </SearchField>
                       <button
                         type="button"
-                        className="mr-2 grid h-12 w-12 place-items-center rounded-full bg-terracotta text-white"
+                        className="grid w-12 h-12 mr-2 text-white rounded-full place-items-center bg-terracotta"
                         onClick={checkAvailability}
                         aria-label="Verifica disponibilita"
                       >
@@ -216,12 +232,12 @@ export function BookingDrawer({
                   <div className="grid gap-5 px-5 py-5 md:hidden">
                     <label className="grid gap-2">
                       <span className="text-xs font-bold">Ospiti</span>
-                      <span className="flex min-h-12 items-center gap-3 border border-ink/15 bg-white px-4">
+                      <span className="flex items-center gap-3 px-4 bg-white border min-h-12 border-ink/15">
                         <Icon icon="ph:users" className="text-muted" />
                         <select
                           value={guests}
                           onChange={(event) => setGuests(event.target.value)}
-                          className="w-full border-0 bg-transparent outline-none"
+                          className="w-full bg-transparent border-0 outline-none"
                         >
                           <option value="2">2 ospiti</option>
                           <option value="4">4 ospiti</option>
@@ -232,12 +248,14 @@ export function BookingDrawer({
                     </label>
                     <label className="grid gap-2">
                       <span className="text-xs font-bold">Dimora</span>
-                      <span className="flex min-h-12 items-center gap-3 border border-ink/15 bg-white px-4">
+                      <span className="flex items-center gap-3 px-4 bg-white border min-h-12 border-ink/15">
                         <Icon icon="ph:house-line" className="text-muted" />
                         <select
                           value={activeSlug}
-                          onChange={(event) => setSelectedSlug(event.target.value)}
-                          className="w-full border-0 bg-transparent outline-none"
+                          onChange={(event) =>
+                            setSelectedSlug(event.target.value)
+                          }
+                          className="w-full bg-transparent border-0 outline-none"
                         >
                           {accommodations.map((item) => (
                             <option key={item.slug} value={item.slug}>
@@ -249,18 +267,60 @@ export function BookingDrawer({
                     </label>
                   </div>
 
-                  <div className="bg-white px-5 py-7 md:mx-8 md:grid md:grid-cols-2 md:gap-12 md:px-10 md:py-10 fxl:mx-[140px]">
-                    {months.map((month) => (
-                      <CalendarMonth
-                        key={month.label}
-                        month={month.month}
-                        year={month.year}
-                        label={month.label}
-                        checkin={checkin}
-                        checkout={checkout}
-                        onSelect={selectDate}
-                      />
-                    ))}
+                  <div className="bg-white px-5 py-7 md:mx-8 md:px-10 md:py-10 fxl:mx-[140px]">
+                    <div className="flex items-center justify-between mb-7">
+                      <button
+                        type="button"
+                        className="grid w-10 h-10 border place-items-center border-ink/10 disabled:cursor-not-allowed disabled:opacity-30"
+                        onClick={goToPreviousMonths}
+                        disabled={!canGoBack}
+                        aria-label="Mesi precedenti"
+                      >
+                        <Icon icon="ph:arrow-left" />
+                      </button>
+                      <p className="text-center text-[0.62rem] font-black uppercase tracking-[0.14em] text-muted">
+                        Disponibilita da oggi
+                      </p>
+                      <button
+                        type="button"
+                        className="grid w-10 h-10 border place-items-center border-ink/10 disabled:cursor-not-allowed disabled:opacity-30"
+                        onClick={goToNextMonths}
+                        disabled={!canGoForward}
+                        aria-label="Mesi successivi"
+                      >
+                        <Icon icon="ph:arrow-right" />
+                      </button>
+                    </div>
+
+                    <div className="grid gap-10 md:hidden">
+                      {mobileMonths.map((month) => (
+                        <CalendarMonth
+                          key={month.label}
+                          month={month.month}
+                          year={month.year}
+                          label={month.label}
+                          checkin={checkin}
+                          checkout={checkout}
+                          minDate={todayString}
+                          onSelect={selectDate}
+                        />
+                      ))}
+                    </div>
+
+                    <div className="hidden gap-10 md:grid md:grid-cols-3">
+                      {desktopMonths.map((month) => (
+                        <CalendarMonth
+                          key={month.label}
+                          month={month.month}
+                          year={month.year}
+                          label={month.label}
+                          checkin={checkin}
+                          checkout={checkout}
+                          minDate={todayString}
+                          onSelect={selectDate}
+                        />
+                      ))}
+                    </div>
                   </div>
 
                   <div className="sticky bottom-0 flex items-center justify-between gap-4 border-t border-ink/10 bg-paper px-5 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 md:px-8 md:pb-6 fxl:px-[140px]">
@@ -274,7 +334,7 @@ export function BookingDrawer({
                     >
                       Cancella
                     </button>
-                    <p className="hidden flex-1 text-xs leading-5 text-muted md:block">
+                    <p className="flex-1 hidden text-xs leading-5 text-muted md:block">
                       {statusText}
                     </p>
                     <button
@@ -310,7 +370,7 @@ function SearchField({
   children: ReactNode;
 }) {
   return (
-    <label className="grid gap-1 border-r border-ink/10 px-7 py-4 last:border-r-0">
+    <label className="grid gap-1 py-4 border-r border-ink/10 px-7 last:border-r-0">
       <span className="text-[0.58rem] font-black uppercase tracking-[0.12em] text-ink">
         {label}
       </span>
@@ -325,6 +385,7 @@ function CalendarMonth({
   label,
   checkin,
   checkout,
+  minDate,
   onSelect,
 }: {
   month: number;
@@ -332,14 +393,15 @@ function CalendarMonth({
   label: string;
   checkin: string;
   checkout: string;
+  minDate: string;
   onSelect: (date: string) => void;
 }) {
   const cells = getCalendarCells(year, month);
 
   return (
     <div>
-      <h3 className="mb-5 text-center text-base font-black">{label}</h3>
-      <div className="grid grid-cols-7 gap-1 text-center text-xs">
+      <h3 className="mb-5 text-base font-black text-center">{label}</h3>
+      <div className="grid grid-cols-7 gap-1 text-xs text-center">
         {weekdays.map((day) => (
           <span className="mb-3 font-bold text-muted" key={day}>
             {day}
@@ -350,13 +412,16 @@ function CalendarMonth({
             <button
               key={cell}
               type="button"
+              disabled={cell < minDate}
               onClick={() => onSelect(cell)}
               className={`grid h-10 place-items-center rounded-md text-sm transition ${
-                isSelected(cell, checkin, checkout)
-                  ? "bg-ivory text-ink ring-1 ring-olive/25"
-                  : cell === checkin || cell === checkout
-                    ? "bg-ivory text-ink ring-1 ring-olive/35"
-                    : "hover:bg-ink/6"
+                cell < minDate
+                  ? "cursor-not-allowed text-ink/20 line-through"
+                  : isSelected(cell, checkin, checkout)
+                    ? "bg-ivory text-ink ring-1 ring-olive/25"
+                    : cell === checkin || cell === checkout
+                      ? "bg-ivory text-ink ring-1 ring-olive/35"
+                      : "hover:bg-ink/6"
               }`}
             >
               {Number(cell.slice(-2))}
@@ -374,7 +439,10 @@ function getCalendarCells(year: number, month: number) {
   const firstDay = new Date(year, month, 1);
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const mondayOffset = (firstDay.getDay() + 6) % 7;
-  const cells: Array<string | null> = Array.from({ length: mondayOffset }, () => null);
+  const cells: Array<string | null> = Array.from(
+    { length: mondayOffset },
+    () => null,
+  );
 
   for (let day = 1; day <= daysInMonth; day += 1) {
     const value = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -382,6 +450,25 @@ function getCalendarCells(year: number, month: number) {
   }
 
   return cells;
+}
+
+function getUpcomingMonths(from: Date, count: number) {
+  return Array.from({ length: count }, (_, index) => {
+    const date = new Date(from.getFullYear(), from.getMonth() + index, 1);
+
+    return {
+      label: new Intl.DateTimeFormat("it-IT", {
+        month: "long",
+        year: "numeric",
+      }).format(date),
+      year: date.getFullYear(),
+      month: date.getMonth(),
+    };
+  });
+}
+
+function toDateValue(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
 function isSelected(date: string, checkin: string, checkout: string) {

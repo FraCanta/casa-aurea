@@ -4,7 +4,10 @@ import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
-import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
+import {
+  type AlloggiMessageKey,
+  useLocaleCurrency,
+} from "@/components/LocaleCurrencyProvider";
 
 export function GalleryLightbox({
   images,
@@ -19,7 +22,10 @@ export function GalleryLightbox({
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const activeImage = activeIndex === null ? null : images[activeIndex];
   const captions = images.map((_, index) =>
-    t("alloggi", `${translationPrefix}.gallery.${index}`),
+    t(
+      "alloggi",
+      `${translationPrefix}.gallery.${index}` as AlloggiMessageKey,
+    ),
   );
 
   function next() {
@@ -61,7 +67,7 @@ export function GalleryLightbox({
           />
           <span className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 bg-paper/92 px-3 py-2 text-[0.55rem] font-black uppercase tracking-[0.1em] text-ink shadow-xl backdrop-blur md:text-[0.55rem]">
             <Icon icon="ph:squares-four" className="text-[0.82rem]" />
-            {t("common", "show All Photos")}
+            {t("common", "showAllPhotos")}
           </span>
         </motion.button>
         <div className="hidden gap-3 md:grid">

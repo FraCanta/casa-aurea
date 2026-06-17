@@ -43,6 +43,7 @@ const localeFormatMap: Record<LocaleCode, string> = {
 
 type Namespace = keyof typeof messages.it;
 type MessageKey<N extends Namespace> = keyof (typeof messages.it)[N];
+export type AlloggiMessageKey = MessageKey<"alloggi">;
 
 type LocaleCurrencyState = {
   locale: LocaleCode;

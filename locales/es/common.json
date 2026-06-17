@@ -105,5 +105,12 @@
   "subscribe": "Suscribirse",
   "mainNavigation": "Navegacion principal",
   "mobileNavigation": "Navegacion movil",
-  "closeMenu": "Cerrar menu"
+  "closeMenu": "Cerrar menú",
+  "photoGallery": "Galería de fotos",
+  "showAllPhotos": "Ver todas las fotos",
+  "closeGallery": "Cerrar la galería",
+  "previousPhoto": "Foto anterior",
+  "nextPhoto": "Foto siguiente",
+  "openPhoto": "Abrir foto",
+  "thumbnail": "Miniatura"
 }

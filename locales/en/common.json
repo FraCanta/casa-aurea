@@ -105,5 +105,12 @@
   "subscribe": "Subscribe",
   "mainNavigation": "Main navigation",
   "mobileNavigation": "Mobile navigation",
-  "closeMenu": "Close menu"
+  "closeMenu": "Close menu",
+  "photoGallery": "Photo gallery",
+  "showAllPhotos": "Show all photos",
+  "closeGallery": "Close gallery",
+  "previousPhoto": "Previous photo",
+  "nextPhoto": "Next photo",
+  "openPhoto": "Open photo",
+  "thumbnail": "Thumbnail"
 }

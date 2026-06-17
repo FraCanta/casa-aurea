@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { BookingDrawer } from "@/components/BookingDrawer";
+import { AccommodationBookingCard } from "@/components/AccommodationBookingCard";
+import { BookingSearchHydrator } from "@/components/BookingSearchHydrator";
 import { GalleryLightbox } from "@/components/GalleryLightbox";
 import { MobileAccommodationBar } from "@/components/MobileAccommodationBar";
 import { Reveal, SoftScale, StaggerItem, StaggerReveal } from "@/components/Motion";
@@ -35,6 +36,11 @@ const accommodationFaqs = [
 
 type PageProps = {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{
+    checkin?: string;
+    checkout?: string;
+    guests?: string;
+  }>;
 };
 
 export function generateStaticParams() {
@@ -66,8 +72,12 @@ export async function generateMetadata({
   };
 }
 
-export default async function AccommodationDetailPage({ params }: PageProps) {
+export default async function AccommodationDetailPage({
+  params,
+  searchParams,
+}: PageProps) {
   const { slug } = await params;
+  const bookingSearch = await searchParams;
   const accommodation = getAccommodation(slug);
 
   if (!accommodation) {
@@ -76,6 +86,12 @@ export default async function AccommodationDetailPage({ params }: PageProps) {
 
   return (
     <main className="pb-24 md:pb-0">
+      <BookingSearchHydrator
+        selectedSlug={accommodation.slug}
+        checkin={bookingSearch?.checkin}
+        checkout={bookingSearch?.checkout}
+        guests={bookingSearch?.guests}
+      />
       <LodgingStructuredData accommodation={accommodation} />
       <section className="bg-ivory px-5 pb-0 pt-28 md:px-[88px] md:pt-48 fxl:px-[140px]">
         <GalleryLightbox
@@ -86,7 +102,7 @@ export default async function AccommodationDetailPage({ params }: PageProps) {
           <p className="mb-3 text-[0.56rem] font-black uppercase tracking-[0.16em] text-olive md:text-[0.62rem]">
             {accommodation.type}
           </p>
-          <h1 className="max-w-[980px] font-serif text-[2.35rem] font-normal leading-[1] tracking-[-0.01em] md:text-[clamp(3.6rem,5vw,5.4rem)]">
+          <h1 className="max-w-[980px] font-serif text-[2.35rem] font-normal leading-[1] tracking-[-0.01em] md:text-[clamp(3.6rem,5vw,4.5rem)]">
             {accommodation.name}
           </h1>
           <div className="mt-5 flex flex-wrap gap-x-5 gap-y-2 text-[0.66rem] font-bold uppercase tracking-[0.08em] text-muted md:text-[0.72rem]">
@@ -126,7 +142,7 @@ export default async function AccommodationDetailPage({ params }: PageProps) {
                     <li className="flex items-center gap-2" key={item}>
                       <Icon
                         icon="ph:check-circle"
-                        className="shrink-0 text-sm text-olive"
+                        className="text-sm shrink-0 text-olive"
                       />
                       <span>{item}</span>
                     </li>
@@ -142,7 +158,7 @@ export default async function AccommodationDetailPage({ params }: PageProps) {
                     <li className="flex items-center gap-2" key={item}>
                       <Icon
                         icon="ph:sparkle"
-                        className="shrink-0 text-sm text-olive"
+                        className="text-sm shrink-0 text-olive"
                       />
                       <span>{item}</span>
                     </li>
@@ -151,43 +167,10 @@ export default async function AccommodationDetailPage({ params }: PageProps) {
               </div>
             </div>
           </Reveal>
-          <SoftScale className="hidden border border-ink/15 bg-paper p-5 md:block md:p-6">
-            <p className="text-[0.56rem] font-black uppercase tracking-[0.16em] text-olive md:text-[0.68rem]">
-              Prezzo
-            </p>
-            <p className="mt-4 font-serif text-[2.25rem] leading-none md:text-[2.8rem]">
-              Da € {accommodation.priceFrom}
-            </p>
-            <p className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.12em] text-muted">
-              per notte
-            </p>
-            <div className="mt-5 grid gap-3 border-y border-ink/10 py-5 text-sm text-muted">
-              <span className="flex items-center gap-3">
-                <Icon icon="ph:calendar-check" className="text-lg text-olive" />
-                {accommodation.availability === "available" &&
-                  "Disponibilita verificabile"}
-                {accommodation.availability === "request" &&
-                  "Disponibilita su richiesta"}
-                {accommodation.availability === "unavailable" &&
-                  "Non disponibile nelle date demo"}
-              </span>
-              <span className="flex items-center gap-3">
-                <Icon icon="ph:map-pin" className="text-lg text-olive" />
-                {accommodation.location}
-              </span>
-            </div>
-            <p className="mt-5 text-sm leading-6 text-muted">
-              Tariffa indicativa. Il prezzo finale dipende da date, durata,
-              ospiti e servizi extra.
-            </p>
-            <BookingDrawer
+          <SoftScale>
+            <AccommodationBookingCard
+              accommodation={accommodation}
               accommodations={accommodations}
-              selectedSlug={accommodation.slug}
-              trigger={
-                <span className="btn btn-primary mt-6 w-full">
-                  Prenota ora
-                </span>
-              }
             />
           </SoftScale>
         </div>
@@ -227,12 +210,12 @@ export default async function AccommodationDetailPage({ params }: PageProps) {
             <h2 className="font-serif text-[1.9rem] font-normal leading-[1.04] md:text-[clamp(2.6rem,3.5vw,3.8rem)]">
               Informazioni utili prima di prenotare.
             </h2>
-            <ul className="mt-6 grid gap-3 text-muted">
+            <ul className="grid gap-3 mt-6 text-muted">
               {accommodation.rules.map((item) => (
                 <li className="flex items-center gap-3" key={item}>
                   <Icon
                     icon="ph:info"
-                    className="shrink-0 text-lg text-olive"
+                    className="text-lg shrink-0 text-olive"
                   />
                   {item}
                 </li>
@@ -247,7 +230,7 @@ export default async function AccommodationDetailPage({ params }: PageProps) {
               <h2 className="font-serif text-[1.8rem] font-normal leading-[1.08] md:text-[clamp(2.3rem,3vw,3.3rem)]">
                 {accommodation.location}
               </h2>
-              <p className="mt-5 inline-flex items-center justify-center gap-2 text-muted">
+              <p className="inline-flex items-center justify-center gap-2 mt-5 text-muted">
                 <Icon
                   icon="ph:navigation-arrow"
                   className="text-lg text-olive"
@@ -269,9 +252,9 @@ export default async function AccommodationDetailPage({ params }: PageProps) {
             Domande prima di prenotare.
           </h2>
         </Reveal>
-        <StaggerReveal className="mt-8 grid gap-3 md:grid-cols-2">
+        <StaggerReveal className="grid gap-3 mt-8 md:grid-cols-2">
           {accommodationFaqs.map((item) => (
-            <StaggerItem key={item.question} className="border border-ink/10 bg-white/40 p-5">
+            <StaggerItem key={item.question} className="p-5 border border-ink/10 bg-white/40">
               <div className="flex items-start justify-between gap-4">
                 <h3 className="text-sm font-black uppercase tracking-[0.08em]">{item.question}</h3>
                 <Icon icon="ph:caret-down" className="mt-1 shrink-0 text-olive" />

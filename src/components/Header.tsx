@@ -5,11 +5,20 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { BookingDrawer } from "@/components/BookingDrawer";
-import { accommodations } from "@/data/accommodations";
+import { LanguageCurrencySelector } from "@/components/LanguageCurrencySelector";
+import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import { navigation, siteConfig } from "@/lib/site";
 
+const navLabelKeys: Record<string, "navStays" | "navExperiences" | "navTerritory" | "navAbout" | "navContact"> = {
+  "/alloggi": "navStays",
+  "/esperienze": "navExperiences",
+  "/territorio": "navTerritory",
+  "/chi-siamo": "navAbout",
+  "/contatti": "navContact",
+};
+
 export function Header() {
+  const { t } = useLocaleCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -51,13 +60,13 @@ export function Header() {
             isLight ? "text-ink/55" : "text-white/70"
           }`}
         >
-          Boutique stays
+          {t("common", "brandSubtitle")}
         </span>
       </Link>
 
       <nav
         className="hidden justify-center gap-9 text-[0.75rem] font-extrabold uppercase tracking-[0.13em] lg:flex fxl:gap-14"
-        aria-label="Navigazione principale"
+        aria-label={t("common", "mainNavigation")}
       >
         {navigation.map((item) => (
           <Link
@@ -65,20 +74,13 @@ export function Header() {
             href={item.href}
             className="transition-opacity hover:opacity-65"
           >
-            {item.label}
+            {t("common", navLabelKeys[item.href] ?? "navStays")}
           </Link>
         ))}
       </nav>
 
       <div className="flex items-center justify-end gap-5">
-        <BookingDrawer
-          accommodations={accommodations}
-          trigger={
-            <span className="btn btn-accent hidden lg:inline-flex">
-              Prenota ora
-            </span>
-          }
-        />
+        <LanguageCurrencySelector />
         <button
           className="grid h-10 w-10 place-items-center lg:hidden"
           type="button"
@@ -96,7 +98,7 @@ export function Header() {
           <motion.div className="fixed inset-0 z-[9998] lg:hidden">
             <motion.button
               type="button"
-              aria-label="Chiudi menu"
+              aria-label={t("common", "closeMenu")}
               className="absolute inset-0 bg-ink/35"
               onClick={() => setIsOpen(false)}
               initial={{ opacity: 0 }}
@@ -107,7 +109,7 @@ export function Header() {
             <motion.nav
               id="mobile-navigation"
               className="absolute left-0 top-0 flex h-dvh w-screen flex-col bg-paper px-7 py-7 text-ink shadow-2xl"
-              aria-label="Navigazione mobile"
+              aria-label={t("common", "mobileNavigation")}
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
@@ -123,14 +125,14 @@ export function Header() {
                     {siteConfig.name}
                   </span>
                   <span className="font-sans text-[0.5rem] font-extrabold uppercase tracking-[0.38em] text-ink/55">
-                    Boutique stays
+                    {t("common", "brandSubtitle")}
                   </span>
                 </Link>
                 <button
                   type="button"
                   className="grid h-10 w-10 place-items-center border border-ink/10"
                   onClick={() => setIsOpen(false)}
-                  aria-label="Chiudi menu"
+                  aria-label={t("common", "closeMenu")}
                 >
                   <Icon icon="ph:x" className="text-xl" />
                 </button>
@@ -144,9 +146,12 @@ export function Header() {
                     className="border-b border-ink/10 py-4"
                     onClick={() => setIsOpen(false)}
                   >
-                    {item.label}
+                    {t("common", navLabelKeys[item.href] ?? "navStays")}
                   </Link>
                 ))}
+              </div>
+              <div className="mt-8">
+                <LanguageCurrencySelector mobile />
               </div>
 
             </motion.nav>

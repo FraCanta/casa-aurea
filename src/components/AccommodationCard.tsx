@@ -2,11 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Icon } from "@iconify/react";
 import type { Accommodation } from "@/data/accommodations";
+import { LocalizedText } from "@/components/LocalizedText";
+import { PriceText } from "@/components/PriceText";
 
 const availabilityLabel = {
-  available: "Disponibile",
-  unavailable: "Non disponibile",
-  request: "Su richiesta"
+  available: "available",
+  unavailable: "unavailable",
+  request: "request"
 };
 
 export function AccommodationCard({ accommodation }: { accommodation: Accommodation }) {
@@ -29,23 +31,31 @@ export function AccommodationCard({ accommodation }: { accommodation: Accommodat
         <div className="my-7 flex flex-wrap gap-3">
           <span className="inline-flex items-center gap-2 border-b border-ink/15 pb-1 text-[0.78rem] uppercase tracking-[0.08em] text-muted">
             <Icon icon="ph:users" className="text-base text-olive" />
-            {accommodation.guests} ospiti
+            {accommodation.guests} <LocalizedText namespace="common" label="guests" />
           </span>
           <span className="inline-flex items-center gap-2 border-b border-ink/15 pb-1 text-[0.78rem] uppercase tracking-[0.08em] text-muted">
             <Icon icon="ph:bed" className="text-base text-olive" />
-            {accommodation.bedrooms} camere
+            {accommodation.bedrooms} <LocalizedText namespace="common" label="bedrooms" />
           </span>
           <span className="inline-flex items-center gap-2 border-b border-ink/15 pb-1 text-[0.78rem] uppercase tracking-[0.08em] text-muted">
             <Icon icon="ph:bathtub" className="text-base text-olive" />
-            {accommodation.bathrooms} bagni
+            {accommodation.bathrooms} <LocalizedText namespace="common" label="bathrooms" />
           </span>
         </div>
         <div className="flex flex-wrap items-center gap-5">
+          <PriceText
+            amount={accommodation.priceFrom}
+            perNight
+            className="text-[0.76rem] font-black uppercase tracking-[0.1em] text-olive"
+          />
           <span className="text-[0.76rem] font-black uppercase tracking-[0.1em] text-muted">
-            {availabilityLabel[accommodation.availability]}
+            <LocalizedText
+              namespace="alloggi"
+              label={availabilityLabel[accommodation.availability]}
+            />
           </span>
           <Link className="btn btn-link text-olive" href={`/alloggi/${accommodation.slug}`}>
-            Esplora la dimora
+            <LocalizedText namespace="alloggi" label="explore" />
             <Icon icon="ph:arrow-right" />
           </Link>
         </div>

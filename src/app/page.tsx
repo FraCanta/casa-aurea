@@ -1,8 +1,6 @@
 import { Icon } from "@iconify/react";
 import Image from "next/image";
 import Link from "next/link";
-import { BookingDrawer } from "@/components/BookingDrawer";
-import { BookingForm } from "@/components/BookingForm";
 import { HeroBookingPanel } from "@/components/HeroBookingPanel";
 import {
   Reveal,
@@ -10,6 +8,8 @@ import {
   StaggerItem,
   StaggerReveal,
 } from "@/components/Motion";
+import { LocalizedText } from "@/components/LocalizedText";
+import { PriceText } from "@/components/PriceText";
 import { LodgingStructuredData } from "@/components/StructuredData";
 import { StayFinder } from "@/components/StayFinder";
 import { accommodations } from "@/data/accommodations";
@@ -18,26 +18,17 @@ import { siteConfig } from "@/lib/site";
 const stays = accommodations.slice(0, 3);
 
 const experienceItems = [
-  ["Spiagge e mare", "Acque cristalline e calette nascoste a pochi minuti."],
-  ["Borghi barocchi", "Architetture straordinarie e atmosfere uniche."],
-  ["Degustazioni", "Vini locali, olio d'eccellenza e sapori autentici."],
-  ["Ritmi rilassati", "Slow living, natura e tempo di qualita."],
-  ["Attivita su misura", "Esperienze pensate per te, tra cultura e avventura."],
+  ["experienceSeaTitle", "experienceSeaText"],
+  ["experienceVillagesTitle", "experienceVillagesText"],
+  ["experienceTasteTitle", "experienceTasteText"],
+  ["experienceSlowTitle", "experienceSlowText"],
+  ["experienceTailorTitle", "experienceTailorText"],
 ];
 
 const reviews = [
-  [
-    "Un luogo che profuma di bellezza e autenticita. Ogni dettaglio e curato con amore.",
-    "Martina, Milano",
-  ],
-  [
-    "Posizione perfetta, dimora splendida e accoglienza impeccabile. Un'esperienza indimenticabile.",
-    "Luca, Torino",
-  ],
-  [
-    "Abbiamo amato la tranquillita, il design e la vicinanza al mare. Consigliatissimo.",
-    "Chiara, Roma",
-  ],
+  ["reviewOne", "reviewOneAuthor"],
+  ["reviewTwo", "reviewTwoAuthor"],
+  ["reviewThree", "reviewThreeAuthor"],
 ];
 
 export default function HomePage() {
@@ -57,16 +48,13 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,15,12,0.32),rgba(12,15,12,0.14)_42%,rgba(12,15,12,0.48)),linear-gradient(90deg,rgba(12,15,12,0.64),rgba(12,15,12,0.34)_36%,rgba(12,15,12,0.08)_76%)]" />
         <Reveal className="relative z-10 mx-auto w-[min(430px,calc(100%-2rem))] pt-24 text-center md:w-[min(760px,calc(100%-11rem))] md:pt-[220px] fxl:w-[900px] fxl:pt-[290px]">
           <h1 className="mb-5 text-[0.8rem] font-black uppercase tracking-[0.22em] text-white/80">
-            Casa Aurea
+            <LocalizedText namespace="home" label="eyebrow" />
           </h1>
           <h2 className="font-serif text-5xl font-normal md:text-[4.7rem] xl:text-[4rem] 2xl:text-[4.2rem] fxl:text-[5rem]">
-            La tua prossima
-            <br />
-            vacanza comincia da qui.
+            <LocalizedText namespace="home" label="title" />
           </h2>
           <p className="mx-auto mt-5 w-[min(390px,100%)] text-[0.9rem] leading-[1.55] text-white/85 2xl:w-[520px] 2xl:text-[1.05rem]">
-            Dimore accoglienti, esperienze locali e disponibilita in tempo reale
-            per scegliere subito il tuo soggiorno.
+            <LocalizedText namespace="home" label="subtitle" />
           </p>
         </Reveal>
 
@@ -76,18 +64,17 @@ export default function HomePage() {
       <section className="grid items-center gap-10 bg-[#fbf8f1] px-6 py-20 md:grid-cols-[0.82fr_1.18fr] md:px-22 md:py-28 fxl:px-35 fxl:py-36">
         <Reveal className="max-w-130">
           <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-[#8e8456]">
-            La nostra filosofia
+            <LocalizedText namespace="home" label="philosophyEyebrow" />
           </p>
           <h2 className="font-serif text-4xl font-normal 2xl:text-5xl fxl:text-6xl">
-            Ospitalità che lascia il segno.
+            <LocalizedText namespace="home" label="philosophyTitle" />
           </h2>
           <p className="mt-6 text-base  text-[#5d5a50]">
-            Crediamo nei dettagli, nell'accoglienza sincera e nei luoghi che
-            raccontano storie vere. Le nostre dimore sono spazi da vivere, non
-            semplici posti in cui dormire.
+            <LocalizedText namespace="home" label="philosophyText" />
           </p>
           <Link href="/chi-siamo" className="btn btn-link mt-7 text-[#171b14]">
-            Scopri di più <Icon icon="ph:arrow-right" />
+            <LocalizedText namespace="home" label="learnMore" />{" "}
+            <Icon icon="ph:arrow-right" />
           </Link>
         </Reveal>
         <SoftScale className="relative overflow-hidden min-h-75 md:min-h-115">
@@ -105,14 +92,15 @@ export default function HomePage() {
         <div className="flex flex-col items-start gap-5 mb-9 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-[#8e8456]">
-              Dove vorresti soggiornare?
+              <LocalizedText namespace="home" label="staysEyebrow" />
             </p>
             <h2 className="font-serif text-4xl font-normal 2xl:text-5xl fxl:text-6xl">
-              Le dimore
+              <LocalizedText namespace="home" label="staysTitle" />
             </h2>
           </div>
           <Link href="/alloggi" className="btn btn-link text-[#171b14]">
-            Vedi tutte <Icon icon="ph:arrow-right" />
+            <LocalizedText namespace="home" label="viewAll" />{" "}
+            <Icon icon="ph:arrow-right" />
           </Link>
         </div>
         <StaggerReveal className="grid gap-5 md:grid-cols-3">
@@ -137,9 +125,33 @@ export default function HomePage() {
                   {stay.name}
                 </strong>
                 <span className="text-sm text-[#5d5a50]">{stay.location}</span>
-                <small className="mt-2 text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#8e8456] self-end">
-                  <Icon icon="ph:arrow-right" />
-                </small>
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-[#5d5a50]">
+                  <span className="inline-flex items-center gap-1.5">
+                    <Icon icon="ph:users" className="text-[#8e8456]" />
+                    {stay.guests}{" "}
+                    <LocalizedText namespace="common" label="guests" />
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Icon icon="ph:bed" className="text-[#8e8456]" />
+                    {stay.bedrooms}{" "}
+                    <LocalizedText namespace="common" label="bedrooms" />
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Icon icon="ph:bathtub" className="text-[#8e8456]" />
+                    {stay.bathrooms}{" "}
+                    <LocalizedText namespace="common" label="bathrooms" />
+                  </span>
+                </div>
+                <div className="mt-4 flex items-center justify-between gap-4 border-t border-[#171b14]/10 pt-4">
+                  <PriceText
+                    amount={stay.priceFrom}
+                    perNight
+                    className="text-[0.62rem] font-black uppercase tracking-[0.12em] text-[#8e8456]"
+                  />
+                  <small className="text-[0.68rem] font-bold uppercase tracking-[0.14em] text-[#8e8456]">
+                    <Icon icon="ph:arrow-right" />
+                  </small>
+                </div>
               </Link>
             </StaggerItem>
           ))}
@@ -159,24 +171,28 @@ export default function HomePage() {
         </SoftScale>
         <Reveal className="pt-10 md:p-16 fxl:p-20">
           <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-[#8e8456]">
-            Esperienze
+            <LocalizedText namespace="home" label="experiencesEyebrow" />
           </p>
           <h2 className="font-serif text-4xl font-normal 2xl:text-5xl fxl:text-6xl">
-            Il territorio, da vivere.
+            <LocalizedText namespace="home" label="experiencesTitle" />
           </h2>
           <p className="mt-6 text-base leading-7 text-[#5d5a50]">
-            Borghi barocchi, spiagge dorate, sapori autentici e tradizioni senza
-            tempo.
+            <LocalizedText namespace="home" label="experiencesText" />
           </p>
           <Link href="/esperienze" className="btn btn-link mt-7 text-[#171b14]">
-            Scopri le esperienze <Icon icon="ph:arrow-right" />
+            <LocalizedText namespace="home" label="experiencesCta" />{" "}
+            <Icon icon="ph:arrow-right" />
           </Link>
         </Reveal>
         <StaggerReveal className="grid mt-10 gap-7 md:col-span-2 md:grid-cols-5">
           {experienceItems.map(([title, text]) => (
             <StaggerItem className="grid gap-2" key={title}>
-              <strong className="text-sm font-bold">{title}</strong>
-              <span className="text-sm leading-6 text-[#5d5a50]">{text}</span>
+              <strong className="text-sm font-bold">
+                <LocalizedText namespace="home" label={title} />
+              </strong>
+              <span className="text-sm leading-6 text-[#5d5a50]">
+                <LocalizedText namespace="home" label={text} />
+              </span>
             </StaggerItem>
           ))}
         </StaggerReveal>
@@ -185,18 +201,20 @@ export default function HomePage() {
       <section className="grid gap-10 bg-[#f0ebe2] px-6 py-20 md:grid-cols-[0.75fr_1.25fr] md:px-[88px] md:py-28 fxl:px-[140px] fxl:py-36">
         <Reveal>
           <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-[#8e8456]">
-            Parole di chi ci ha scelto
+            <LocalizedText namespace="home" label="reviewsEyebrow" />
           </p>
           <h2 className="font-serif text-[clamp(2.4rem,4vw,4.4rem)] font-normal leading-[1] tracking-[-0.01em] 2xl:text-5xl fxl:text-6xl">
-            Ospiti felici, ricordi autentici.
+            <LocalizedText namespace="home" label="reviewsTitle" />
           </h2>
         </Reveal>
         <StaggerReveal className="grid gap-5 md:grid-cols-3">
           {reviews.map(([text, author]) => (
             <StaggerItem className="m-0 bg-white/60 p-7" key={author}>
-              <p className="text-[0.95rem] leading-7 text-[#4f4d45]">{text}</p>
+              <p className="text-[0.95rem] leading-7 text-[#4f4d45]">
+                <LocalizedText namespace="home" label={text} />
+              </p>
               <strong className="mt-5 block text-[0.72rem] tracking-[0.08em]">
-                {author}
+                <LocalizedText namespace="home" label={author} />
               </strong>
             </StaggerItem>
           ))}

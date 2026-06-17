@@ -3,6 +3,7 @@ import "./globals.css";
 import { BookingProvider } from "@/components/BookingState";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
+import { LocaleCurrencyProvider } from "@/components/LocaleCurrencyProvider";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { siteConfig } from "@/lib/site";
 
@@ -29,13 +30,15 @@ export default function RootLayout({
   return (
     <html lang="it">
       <body>
-        <BookingProvider>
-          <SmoothScroll>
-            <Header />
-            {children}
-            <Footer />
-          </SmoothScroll>
-        </BookingProvider>
+        <LocaleCurrencyProvider>
+          <BookingProvider>
+            <SmoothScroll>
+              <Header />
+              {children}
+              <Footer />
+            </SmoothScroll>
+          </BookingProvider>
+        </LocaleCurrencyProvider>
       </body>
     </html>
   );

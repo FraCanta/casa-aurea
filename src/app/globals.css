@@ -38,6 +38,22 @@ a {
 }
 
 button,
+a,
+summary,
+select,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+[role="button"] {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+button,
 input,
 select,
 textarea {

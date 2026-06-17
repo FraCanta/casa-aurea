@@ -1,9 +1,22 @@
+"use client";
+
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import { accommodations } from "@/data/accommodations";
 import { navigation, siteConfig } from "@/lib/site";
 
+const navLabelKeys: Record<string, "navStays" | "navExperiences" | "navTerritory" | "navAbout" | "navContact"> = {
+  "/alloggi": "navStays",
+  "/esperienze": "navExperiences",
+  "/territorio": "navTerritory",
+  "/chi-siamo": "navAbout",
+  "/contatti": "navContact",
+};
+
 export function Footer() {
+  const { t } = useLocaleCurrency();
+
   return (
     <footer className="overflow-hidden bg-[#0e1a14] text-white">
       <div className="mx-auto px-6 py-14 md:px-22 md:py-18 fxl:px-35 fxl:py-14">
@@ -14,11 +27,11 @@ export function Footer() {
                 {siteConfig.name}
               </span>
               <span className="font-sans text-[0.52rem] font-extrabold uppercase tracking-[0.34em] text-white/45">
-                Boutique stays
+                {t("common", "brandSubtitle")}
               </span>
             </Link>
             <p className="mt-8 font-serif text-base font-normal text-white fxl:text-lg">
-              Ospitalita boutique tra mare, natura e luoghi da vivere lentamente.
+              {t("common", "footerClaim")}
             </p>
             <div className="mt-9 flex gap-4 text-[1.15rem] text-white/62">
               <a className="transition-colors hover:text-white" href={siteConfig.socials.instagram} aria-label="Instagram">
@@ -35,18 +48,18 @@ export function Footer() {
 
           <div className="min-w-0">
             <p className="mb-5 font-sans text-[0.68rem] font-black uppercase tracking-[0.18em] text-white/45">
-              Menu
+              {t("common", "footerMenu")}
             </p>
             {navigation.map((item) => (
               <Link className="mb-2 block text-[0.9rem] leading-6 text-white/72 transition-colors hover:text-white" href={item.href} key={item.href}>
-                {item.label}
+                {t("common", navLabelKeys[item.href] ?? "navStays")}
               </Link>
             ))}
           </div>
 
           <div className="min-w-0">
             <p className="mb-5 font-sans text-[0.68rem] font-black uppercase tracking-[0.18em] text-white/45">
-              Dimore
+              {t("common", "footerStays")}
             </p>
             {accommodations.map((item) => (
               <Link className="mb-2 block text-[0.9rem] leading-6 text-white/72 transition-colors hover:text-white" key={item.slug} href={`/alloggi/${item.slug}`}>
@@ -57,7 +70,7 @@ export function Footer() {
 
           <div className="min-w-0">
             <p className="mb-5 font-sans text-[0.68rem] font-black uppercase tracking-[0.18em] text-white/45">
-              Contatti
+              {t("common", "footerContacts")}
             </p>
             <a className="mb-2 block text-[0.9rem] leading-6 text-white/72 transition-colors hover:text-white" href={`tel:${siteConfig.phone}`}>
               {siteConfig.phone}
@@ -70,22 +83,22 @@ export function Footer() {
 
           <div className="min-w-0">
             <p className="mb-5 font-sans text-[0.68rem] font-black uppercase tracking-[0.18em] text-white/45">
-              Newsletter
+              {t("common", "footerNewsletter")}
             </p>
             <p className="max-w-[320px] text-[0.9rem] leading-6 text-white/62">
-              Ricevi consigli di viaggio, offerte esclusive e novita dalle nostre dimore.
+              {t("common", "newsletterText")}
             </p>
             <form className="relative mt-7 min-h-12 max-w-[340px] rounded-full border border-white/16">
               <input
                 className="h-12 w-full border-0 bg-transparent px-5 pr-16 text-[0.88rem] text-white outline-none placeholder:text-white/35"
                 type="email"
-                placeholder="La tua email"
+                placeholder={t("common", "newsletterPlaceholder")}
                 aria-label="Email newsletter"
               />
               <button
                 className="absolute right-1 top-1 grid h-10 w-10 place-items-center rounded-full bg-[#d8d0bd] text-[#111a15] transition-transform hover:scale-95"
                 type="submit"
-                aria-label="Iscriviti"
+                aria-label={t("common", "subscribe")}
               >
                 <Icon icon="ph:arrow-right" />
               </button>

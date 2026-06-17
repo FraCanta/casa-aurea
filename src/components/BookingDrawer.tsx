@@ -5,23 +5,31 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import { useBookingState } from "@/components/BookingState";
+import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import type { Accommodation } from "@/data/accommodations";
 
 type DrawerStatus = "idle" | "missing" | "available" | "unavailable" | "sent";
 
-const weekdays = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
+const weekdaysByLocale = {
+  it: ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"],
+  en: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+  es: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
+};
 
 export function BookingDrawer({
   accommodations,
   selectedSlug,
   trigger,
   onOpen,
+  onComplete,
 }: {
   accommodations: Accommodation[];
   selectedSlug?: string;
   trigger?: ReactNode;
   onOpen?: () => void;
+  onComplete?: (slug: string) => void;
 }) {
+  const { locale, t } = useLocaleCurrency();
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [status, setStatus] = useState<DrawerStatus>("idle");
@@ -39,7 +47,7 @@ export function BookingDrawer({
   } = useBookingState();
   const today = useMemo(() => new Date(), []);
   const todayString = useMemo(() => toDateValue(today), [today]);
-  const months = useMemo(() => getUpcomingMonths(today, 12), [today]);
+  const months = useMemo(() => getUpcomingMonths(today, 12, locale), [locale, today]);
   const mobileMonths = months.slice(calendarOffset, calendarOffset + 2);
   const desktopMonths = months.slice(calendarOffset, calendarOffset + 3);
   const canGoBack = calendarOffset > 0;
@@ -88,23 +96,26 @@ export function BookingDrawer({
 
     if (selectedAccommodation.availability === "available") {
       setStatus("available");
+      onComplete?.(activeSlug);
       return;
     }
 
     if (selectedAccommodation.availability === "unavailable") {
       setStatus("unavailable");
+      onComplete?.(activeSlug);
       return;
     }
 
     setStatus("sent");
+    onComplete?.(activeSlug);
   }
 
   const statusText = {
-    idle: "Scegli dimora, ospiti e date: questi dati restano sincronizzati con il futuro booking engine.",
-    missing: "Seleziona check-in e check-out per continuare.",
+    idle: t("common", "bookingStatusIdle"),
+    missing: t("common", "bookingStatusMissing"),
     available: `${selectedAccommodation?.name} risulta disponibile. Puoi inviare la richiesta.`,
     unavailable: `${selectedAccommodation?.name} non risulta disponibile per queste date.`,
-    sent: "Richiesta pronta: quando collegherai booking engine o iCal, useremo gli stessi dati.",
+    sent: t("common", "bookingStatusSent"),
   }[status];
 
   function goToPreviousMonths() {
@@ -132,7 +143,7 @@ export function BookingDrawer({
               <motion.div className="fixed inset-0 z-[9999]">
                 <motion.button
                   type="button"
-                  aria-label="Chiudi selezione date"
+                  aria-label={t("common", "close")}
                   className="absolute inset-0 bg-ink/45"
                   onClick={() => setOpen(false)}
                   initial={{ opacity: 0 }}
@@ -154,12 +165,12 @@ export function BookingDrawer({
                         type="button"
                         className="grid w-10 h-10 place-items-center"
                         onClick={() => setOpen(false)}
-                        aria-label="Chiudi"
+                        aria-label={t("common", "close")}
                       >
                         <Icon icon="ph:x" className="text-xl" />
                       </button>
                       <h2 className="text-base font-bold text-center">
-                        Seleziona date
+                        {t("common", "selectDates")}
                       </h2>
                     </div>
                   </div>
@@ -168,23 +179,23 @@ export function BookingDrawer({
                     <div className="flex items-center justify-between mb-7">
                       <div>
                         <p className="text-[0.62rem] font-black uppercase tracking-[0.16em] text-olive">
-                          Prenota il tuo soggiorno
+                          {t("common", "bookingStay")}
                         </p>
                         <h2 className="mt-2 font-serif text-[clamp(2.5rem,5vw,3.5rem)] leading-[1]">
-                          Seleziona le date.
+                          {t("common", "selectDates")}.
                         </h2>
                       </div>
                       <button
                         type="button"
                         className="grid w-12 h-12 border place-items-center border-ink/15"
                         onClick={() => setOpen(false)}
-                        aria-label="Chiudi"
+                        aria-label={t("common", "close")}
                       >
                         <Icon icon="ph:x" className="text-xl" />
                       </button>
                     </div>
                     <div className="grid grid-cols-[1fr_1fr_0.8fr_56px] items-center rounded-full bg-white shadow-[0_16px_42px_rgba(23,27,20,0.12)]">
-                      <SearchField label="Dimora">
+                      <SearchField label={t("common", "accommodation")}>
                         <select
                           value={activeSlug}
                           onChange={(event) =>
@@ -199,30 +210,31 @@ export function BookingDrawer({
                           ))}
                         </select>
                       </SearchField>
-                      <SearchField label="Date">
+                      <SearchField label={t("common", "dates")}>
                         <span className="text-sm">
-                          {checkin || "Check-in"}{" "}
+                          {formatDateForDisplay(checkin) || t("common", "checkin")}{" "}
                           <span className="text-muted">-</span>{" "}
-                          {checkout || "Check-out"}
+                          {formatDateForDisplay(checkout) || t("common", "checkout")}
                         </span>
                       </SearchField>
-                      <SearchField label="Ospiti">
+                      <SearchField label={t("common", "guests")}>
                         <select
                           value={guests}
                           onChange={(event) => setGuests(event.target.value)}
                           className="w-full text-sm bg-transparent border-0 outline-none"
                         >
-                          <option value="2">2 ospiti</option>
-                          <option value="4">4 ospiti</option>
-                          <option value="6">6 ospiti</option>
-                          <option value="8">8 ospiti</option>
+                          {[2, 4, 6, 8].map((value) => (
+                            <option key={value} value={String(value)}>
+                              {value} {t("common", "guests")}
+                            </option>
+                          ))}
                         </select>
                       </SearchField>
                       <button
                         type="button"
                         className="grid w-12 h-12 mr-2 text-white rounded-full place-items-center bg-terracotta"
                         onClick={checkAvailability}
-                        aria-label="Verifica disponibilita"
+                        aria-label={t("common", "checkAvailability")}
                       >
                         <Icon icon="ph:magnifying-glass" className="text-xl" />
                       </button>
@@ -231,7 +243,7 @@ export function BookingDrawer({
 
                   <div className="grid gap-5 px-5 py-5 md:hidden">
                     <label className="grid gap-2">
-                      <span className="text-xs font-bold">Ospiti</span>
+                      <span className="text-xs font-bold">{t("common", "guests")}</span>
                       <span className="flex items-center gap-3 px-4 bg-white border min-h-12 border-ink/15">
                         <Icon icon="ph:users" className="text-muted" />
                         <select
@@ -239,15 +251,16 @@ export function BookingDrawer({
                           onChange={(event) => setGuests(event.target.value)}
                           className="w-full bg-transparent border-0 outline-none"
                         >
-                          <option value="2">2 ospiti</option>
-                          <option value="4">4 ospiti</option>
-                          <option value="6">6 ospiti</option>
-                          <option value="8">8 ospiti</option>
+                          {[2, 4, 6, 8].map((value) => (
+                            <option key={value} value={String(value)}>
+                              {value} {t("common", "guests")}
+                            </option>
+                          ))}
                         </select>
                       </span>
                     </label>
                     <label className="grid gap-2">
-                      <span className="text-xs font-bold">Dimora</span>
+                      <span className="text-xs font-bold">{t("common", "accommodation")}</span>
                       <span className="flex items-center gap-3 px-4 bg-white border min-h-12 border-ink/15">
                         <Icon icon="ph:house-line" className="text-muted" />
                         <select
@@ -274,19 +287,19 @@ export function BookingDrawer({
                         className="grid w-10 h-10 border place-items-center border-ink/10 disabled:cursor-not-allowed disabled:opacity-30"
                         onClick={goToPreviousMonths}
                         disabled={!canGoBack}
-                        aria-label="Mesi precedenti"
+                        aria-label={t("common", "previousMonths")}
                       >
                         <Icon icon="ph:arrow-left" />
                       </button>
                       <p className="text-center text-[0.62rem] font-black uppercase tracking-[0.14em] text-muted">
-                        Disponibilita da oggi
+                        {t("common", "availabilityFromToday")}
                       </p>
                       <button
                         type="button"
                         className="grid w-10 h-10 border place-items-center border-ink/10 disabled:cursor-not-allowed disabled:opacity-30"
                         onClick={goToNextMonths}
                         disabled={!canGoForward}
-                        aria-label="Mesi successivi"
+                        aria-label={t("common", "nextMonths")}
                       >
                         <Icon icon="ph:arrow-right" />
                       </button>
@@ -302,6 +315,7 @@ export function BookingDrawer({
                           checkin={checkin}
                           checkout={checkout}
                           minDate={todayString}
+                          weekdays={weekdaysByLocale[locale]}
                           onSelect={selectDate}
                         />
                       ))}
@@ -317,6 +331,7 @@ export function BookingDrawer({
                           checkin={checkin}
                           checkout={checkout}
                           minDate={todayString}
+                          weekdays={weekdaysByLocale[locale]}
                           onSelect={selectDate}
                         />
                       ))}
@@ -332,7 +347,7 @@ export function BookingDrawer({
                         setStatus("idle");
                       }}
                     >
-                      Cancella
+                      {t("common", "clear")}
                     </button>
                     <p className="flex-1 hidden text-xs leading-5 text-muted md:block">
                       {statusText}
@@ -342,7 +357,7 @@ export function BookingDrawer({
                       className="btn btn-primary"
                       onClick={checkAvailability}
                     >
-                      Verifica disponibilita
+                      {t("common", "checkAvailability")}
                     </button>
                   </div>
                   <p
@@ -386,6 +401,7 @@ function CalendarMonth({
   checkin,
   checkout,
   minDate,
+  weekdays,
   onSelect,
 }: {
   month: number;
@@ -394,6 +410,7 @@ function CalendarMonth({
   checkin: string;
   checkout: string;
   minDate: string;
+  weekdays: string[];
   onSelect: (date: string) => void;
 }) {
   const cells = getCalendarCells(year, month);
@@ -452,12 +469,15 @@ function getCalendarCells(year: number, month: number) {
   return cells;
 }
 
-function getUpcomingMonths(from: Date, count: number) {
+function getUpcomingMonths(from: Date, count: number, locale: "it" | "en" | "es") {
+  const formatterLocale =
+    locale === "en" ? "en-US" : locale === "es" ? "es-ES" : "it-IT";
+
   return Array.from({ length: count }, (_, index) => {
     const date = new Date(from.getFullYear(), from.getMonth() + index, 1);
 
     return {
-      label: new Intl.DateTimeFormat("it-IT", {
+      label: new Intl.DateTimeFormat(formatterLocale, {
         month: "long",
         year: "numeric",
       }).format(date),
@@ -469,6 +489,13 @@ function getUpcomingMonths(from: Date, count: number) {
 
 function toDateValue(date: Date) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
+function formatDateForDisplay(value: string) {
+  if (!value) return "";
+  const [year, month, day] = value.split("-");
+  if (!year || !month || !day) return value;
+  return `${day}/${Number(month)}/${year}`;
 }
 
 function isSelected(date: string, checkin: string, checkout: string) {

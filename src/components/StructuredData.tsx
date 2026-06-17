@@ -32,7 +32,7 @@ export function LodgingStructuredData({ accommodation }: { accommodation?: Accom
           maxValue: accommodation.guests
         },
         url: `/alloggi/${accommodation.slug}`,
-        priceRange: `Da EUR ${accommodation.priceFrom} a notte`
+        priceRange: `Da € ${accommodation.priceFrom} a notte`
       }
     : {
         "@context": "https://schema.org",

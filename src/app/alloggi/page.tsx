@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AccommodationCard } from "@/components/AccommodationCard";
+import { LocalizedText } from "@/components/LocalizedText";
 import { Reveal, StaggerItem, StaggerReveal } from "@/components/Motion";
 import { accommodations } from "@/data/accommodations";
 import { siteConfig } from "@/lib/site";
@@ -15,14 +16,13 @@ export default function AccommodationsPage() {
       <section className="bg-paper px-6 pb-20 pt-36 text-ink md:px-[88px] md:pb-28 md:pt-48 fxl:px-[140px]">
         <Reveal>
           <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">
-            Scegli il tuo soggiorno
+            <LocalizedText namespace="alloggi" label="archiveEyebrow" />
           </p>
           <h1 className="max-w-[1000px] font-serif text-[clamp(3rem,6vw,6.8rem)] font-normal leading-[0.95] tracking-[-0.01em] fxl:text-[5.5rem]">
-            Case vacanza, ville e appartamenti turistici.
+            <LocalizedText namespace="alloggi" label="archiveTitle" />
           </h1>
           <p className="mt-6 max-w-[680px] text-base leading-7 text-muted">
-            Una pagina archivio SEO friendly per clienti con una sola struttura
-            o con piu alloggi.
+            <LocalizedText namespace="alloggi" label="archiveText" />
           </p>
         </Reveal>
       </section>

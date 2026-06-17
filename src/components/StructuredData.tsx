@@ -39,7 +39,7 @@ export function LodgingStructuredData({ accommodation }: { accommodation?: Accom
         "@type": "LodgingBusiness",
         name: siteConfig.name,
         description:
-          "Template moderno per casa vacanza, villa in affitto e appartamento vacanze con richiesta disponibilita e pagine SEO.",
+          "Template moderno per casa vacanza, villa in affitto e appartamento vacanze con richiesta disponibilità e pagine SEO.",
         address: {
           "@type": "PostalAddress",
           streetAddress: siteConfig.address,

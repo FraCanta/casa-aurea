@@ -67,9 +67,9 @@ export function HeroBookingPanel({
   const statusText = {
     idle: t("common", "calendarHelp"),
     missing: t("common", "calendarMissing"),
-    available: `${selectedAccommodation?.name} risulta disponibile per ${guests} ${t("common", "guests")}. Puoi inviare la richiesta.`,
-    unavailable: `${selectedAccommodation?.name} non e disponibile: prova un'altra dimora o altre date.`,
-    request: `${selectedAccommodation?.name} richiede conferma manuale: invia una richiesta e ti risponderemo.`,
+    available: `${selectedAccommodation?.name} ${t("common", "heroAvailable")}`,
+    unavailable: `${selectedAccommodation?.name} ${t("common", "heroUnavailable")}`,
+    request: `${selectedAccommodation?.name} ${t("common", "heroRequest")}`,
   }[status];
 
   const statusClass =
@@ -95,7 +95,7 @@ export function HeroBookingPanel({
 
       <div
         className="relative z-20 mx-5 mt-7 hidden bg-paper p-4 text-ink shadow-[0_28px_90px_rgba(23,27,20,0.16)] md:absolute md:inset-x-[88px] md:bottom-[-64px] md:mx-0 md:mt-0 md:grid md:min-h-[150px] md:grid-cols-[1.15fr_1fr_1fr_.75fr_220px] md:p-[30px_44px_22px] fxl:inset-x-[140px] fxl:bottom-[-76px] fxl:min-h-[168px] fxl:grid-cols-[1.2fr_1fr_1fr_.75fr_240px] fxl:p-[36px_56px_28px]"
-        aria-label="Ricerca disponibilita"
+        aria-label="Ricerca disponibilità"
       >
         <BookingFields
           checkin={checkin}

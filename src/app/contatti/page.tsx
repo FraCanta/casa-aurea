@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { BookingForm } from "@/components/BookingForm";
+import { LocalizedText } from "@/components/LocalizedText";
 import { accommodations } from "@/data/accommodations";
 import { siteConfig } from "@/lib/site";
 
@@ -15,7 +16,7 @@ export default function ContactPage() {
         <div className="grid gap-10 md:grid-cols-[0.82fr_1.18fr]">
           <aside className=" pt-7">
             <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">
-              Dati struttura
+              <LocalizedText namespace="pages" label="contactDetails" />
             </p>
             <h2 className="font-serif text-[clamp(2.2rem,4vw,3rem)] font-normal leading-[1] pb-4">
               {siteConfig.name}
@@ -47,14 +48,13 @@ export default function ContactPage() {
         <div className="grid min-h-[420px] place-items-center bg-[linear-gradient(135deg,rgba(126,145,136,0.18),rgba(159,93,73,0.08)),repeating-linear-gradient(45deg,rgba(24,35,31,0.08)_0_1px,transparent_1px_22px)] p-8 text-center">
           <div>
             <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">
-              Mappa
+              <LocalizedText namespace="pages" label="contactMap" />
             </p>
             <h2 className="font-serif text-[clamp(2.2rem,4vw,4.5rem)] font-normal leading-[1]">
               {siteConfig.mapLabel}
             </h2>
             <p className="mx-auto mt-5 max-w-[520px] text-muted">
-              Placeholder leggero per integrare Google Maps, Mapbox o una mappa
-              statica ottimizzata.
+              <LocalizedText namespace="pages" label="contactMapText" />
             </p>
           </div>
         </div>

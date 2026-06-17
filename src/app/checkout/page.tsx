@@ -5,7 +5,7 @@ import { accommodations, getAccommodation } from "@/data/accommodations";
 export const metadata: Metadata = {
   title: "Checkout soggiorno | Casa Aurea",
   description:
-    "Checkout dimostrativo per richiesta disponibilita o pagamento simulato di una casa vacanza boutique.",
+    "Checkout dimostrativo per richiesta disponibilità o pagamento simulato di una casa vacanza boutique.",
 };
 
 type CheckoutPageProps = {

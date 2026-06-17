@@ -76,10 +76,10 @@ export function CheckoutFlow({
             {t("common", "checkout")}
           </p>
           <h1 className="font-serif text-[2rem] font-normal leading-[1] md:text-[clamp(3rem,6vw,3rem)]">
-            Completa il soggiorno.
+            {t("common", "completeStay")}
           </h1>
           <p className="mt-3 max-w-[620px] text-xs leading-6 text-muted md:mt-4 md:text-base md:leading-7">
-            Simula una richiesta o un pagamento: i dati arrivano dalla ricerca.
+            {t("common", "checkoutIntro")}
           </p>
         </div>
         <Link className="btn btn-secondary" href={`/alloggi/${accommodation.slug}`}>
@@ -103,13 +103,13 @@ export function CheckoutFlow({
             formatPrice={formatPrice}
             t={t}
           />
-          <MapCard accommodation={accommodation} />
+          <MapCard accommodation={accommodation} t={t} />
         </aside>
 
         <form className="grid gap-5 md:gap-8 lg:col-start-1 lg:row-start-1" onSubmit={submitCheckout}>
           <section className="p-4 border border-ink/10 bg-paper md:p-7">
             <p className="mb-4 text-[0.54rem] font-black uppercase tracking-[0.16em] text-olive md:mb-5 md:text-[0.58rem]">
-              Modalita
+              {t("common", "payment")}
             </p>
             <div className="grid grid-cols-2 p-1 border border-ink/10 bg-white/40">
               <TabButton
@@ -127,8 +127,8 @@ export function CheckoutFlow({
             </div>
             <p className="mt-4 text-xs leading-5 text-muted md:text-sm md:leading-6">
               {mode === "request"
-                ? "La struttura riceve i dati e conferma disponibilità, prezzo e condizioni."
-                : "Flusso demo pronto per Stripe, booking engine o pagamento del deposito."}
+                ? t("common", "modeRequestText")
+                : t("common", "modePaymentText")}
             </p>
           </section>
 
@@ -137,16 +137,16 @@ export function CheckoutFlow({
               {t("common", "guestData")}
             </p>
             <div className="grid gap-3 md:grid-cols-2 md:gap-5">
-              <Input label="Nome e cognome" placeholder="Es. Francesca Rossi" required />
+              <Input label={t("common", "fullName")} placeholder="Es. Francesca Rossi" required />
               <Input label="Email" type="email" placeholder="nome@email.it" required />
-              <Input label="Telefono" type="tel" placeholder="+39 333 123 4567" required />
-              <Input label="Paese" placeholder="Italia" />
+              <Input label={t("common", "phone")} type="tel" placeholder="+39 333 123 4567" required />
+              <Input label={t("common", "country")} placeholder="Italia" />
             </div>
             <label className="mt-3 grid gap-2 text-[0.58rem] font-black uppercase tracking-[0.1em] md:mt-5 md:text-[0.62rem]">
               {t("common", "message")}
               <textarea
                 className="p-3 text-sm font-medium tracking-normal normal-case transition border outline-none min-h-24 border-ink/10 bg-white/50 focus:border-olive md:min-h-32 md:p-4"
-                placeholder="Arrivo previsto, richieste particolari, bambini, animali o note sul soggiorno."
+                placeholder={t("common", "messagePlaceholder")}
               />
             </label>
           </section>
@@ -157,13 +157,13 @@ export function CheckoutFlow({
                 {t("common", "payment")}
               </p>
               <div className="grid gap-3 md:grid-cols-2 md:gap-5">
-                <Input label="Numero carta" placeholder="4242 4242 4242 4242" />
-                <Input label="Intestatario" placeholder="Francesca Rossi" />
-                <Input label="Scadenza" placeholder="12/28" />
+                <Input label={t("common", "cardNumber")} placeholder="4242 4242 4242 4242" />
+                <Input label={t("common", "cardHolder")} placeholder="Francesca Rossi" />
+                <Input label={t("common", "expiry")} placeholder="12/28" />
                 <Input label="CVC" placeholder="123" />
               </div>
               <p className="mt-4 text-xs leading-5 text-muted">
-                Campi dimostrativi: nessun pagamento reale viene elaborato.
+                {t("common", "demoPaymentNote")}
               </p>
             </section>
           )}
@@ -175,9 +175,9 @@ export function CheckoutFlow({
           {status !== "idle" && (
             <div className="p-4 text-xs leading-6 border-l-2 border-olive bg-paper text-muted md:p-5 md:text-sm md:leading-7">
               <strong className="block text-ink">
-                {status === "paid" ? "Pagamento simulato completato." : "Richiesta inviata."}
+                {status === "paid" ? t("common", "paymentDone") : t("common", "requestSent")}
               </strong>
-              Il template puo collegarsi a email, CRM, Stripe o booking engine.
+              {t("common", "checkoutSuccessText")}
             </div>
           )}
         </form>
@@ -241,7 +241,13 @@ function SummaryCard({
   );
 }
 
-function MapCard({ accommodation }: { accommodation: Accommodation }) {
+function MapCard({
+  accommodation,
+  t,
+}: {
+  accommodation: Accommodation;
+  t: ReturnType<typeof useLocaleCurrency>["t"];
+}) {
   return (
     <section className="overflow-hidden border border-ink/10 bg-paper">
       <div className="grid min-h-[180px] place-items-center bg-[linear-gradient(135deg,rgba(126,145,136,0.22),rgba(159,93,73,0.08)),repeating-linear-gradient(45deg,rgba(24,35,31,0.08)_0_1px,transparent_1px_22px)] p-5 text-center md:min-h-[280px] md:p-6">
@@ -250,17 +256,17 @@ function MapCard({ accommodation }: { accommodation: Accommodation }) {
             <Icon icon="ph:map-pin" className="text-xl md:text-2xl" />
           </span>
           <h3 className="mt-4 font-serif text-2xl leading-[1] md:mt-5 md:text-3xl">
-            {accommodation.location}
+            {t("alloggi", `${accommodation.slug}.location` as never)}
           </h3>
           <p className="mt-3 text-xs leading-5 text-muted md:text-sm md:leading-6">
-            Coordinate demo: {accommodation.coordinates.latitude},{" "}
+            {t("pages", "detailCoordinates")}: {accommodation.coordinates.latitude},{" "}
             {accommodation.coordinates.longitude}
           </p>
         </div>
       </div>
       <div className="p-4 text-xs leading-5 text-muted md:p-5 md:text-sm md:leading-6">
         <strong className="block text-ink">{siteConfig.address}</strong>
-        Posizione indicativa pronta per Google Maps, Mapbox o gestionale.
+        {t("common", "mapReadyText")}
       </div>
     </section>
   );

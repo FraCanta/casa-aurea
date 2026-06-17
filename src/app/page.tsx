@@ -50,7 +50,7 @@ export default function HomePage() {
           <h1 className="mb-5 text-[0.8rem] font-black uppercase tracking-[0.22em] text-white/80">
             <LocalizedText namespace="home" label="eyebrow" />
           </h1>
-          <h2 className="font-serif text-5xl font-normal md:text-[4.7rem] xl:text-[4rem] 2xl:text-[4.2rem] fxl:text-[5rem]">
+          <h2 className="font-serif text-[2.4rem] font-normal md:text-[4.7rem] xl:text-[4rem] leading-none 2xl:text-[4.2rem] fxl:text-[5rem]">
             <LocalizedText namespace="home" label="title" />
           </h2>
           <p className="mx-auto mt-5 w-[min(390px,100%)] text-[0.9rem] leading-[1.55] text-white/85 2xl:w-[520px] 2xl:text-[1.05rem]">
@@ -124,7 +124,12 @@ export default function HomePage() {
                 <strong className="text-base font-black uppercase ">
                   {stay.name}
                 </strong>
-                <span className="text-sm text-[#5d5a50]">{stay.location}</span>
+                <span className="text-sm text-[#5d5a50]">
+                  <LocalizedText
+                    namespace="alloggi"
+                    label={`${stay.slug}.location`}
+                  />
+                </span>
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-[0.62rem] font-bold uppercase tracking-[0.08em] text-[#5d5a50]">
                   <span className="inline-flex items-center gap-1.5">
                     <Icon icon="ph:users" className="text-[#8e8456]" />
@@ -248,7 +253,7 @@ export default function HomePage() {
               accommodations={accommodations}
               trigger={
                 <span className="justify-between w-full btn btn-secondary">
-                  Richiedi disponibilita <Icon icon="ph:arrow-right" />
+                  Richiedi disponibilità <Icon icon="ph:arrow-right" />
                 </span>
               }
             />

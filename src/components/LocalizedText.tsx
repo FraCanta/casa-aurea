@@ -8,7 +8,7 @@ export function LocalizedText({
   label,
   children,
 }: {
-  namespace: "common" | "home" | "alloggi" | "checkout";
+  namespace: "common" | "home" | "alloggi" | "checkout" | "pages";
   label: string;
   children?: ReactNode;
 }) {

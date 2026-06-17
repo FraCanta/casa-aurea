@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { BookingDrawer } from "@/components/BookingDrawer";
 import { useBookingState } from "@/components/BookingState";
+import { LocalizedText } from "@/components/LocalizedText";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import type { Accommodation } from "@/data/accommodations";
 
@@ -51,11 +52,11 @@ export function AccommodationBookingCard({
         <div className="grid gap-3 py-5 mt-5 text-sm border-y border-ink/10 text-muted">
           <span className="flex items-center gap-3">
             <Icon icon="ph:calendar-check" className="text-lg text-olive" />
-            Disponibilita verificabile dal calendario
+            {t("common", "calendarAvailability")}
           </span>
           <span className="flex items-center gap-3">
             <Icon icon="ph:map-pin" className="text-lg text-olive" />
-            {accommodation.location}
+            <LocalizedText namespace="alloggi" label={`${accommodation.slug}.location`} />
           </span>
         </div>
         <p className="mt-5 text-sm leading-6 text-muted">
@@ -106,7 +107,7 @@ export function AccommodationBookingCard({
           </p>
         </div>
         <p className="max-w-[140px] text-right text-xs leading-5 text-muted">
-          Esclusi eventuali extra e tasse locali.
+          {t("common", "estimatedExcludesFees")}
         </p>
       </div>
       <div className="grid gap-3 mt-6">
@@ -134,8 +135,8 @@ export function AccommodationBookingCard({
       </div>
       <p className="py-1 pl-3 mt-4 text-xs leading-5 border-l-2 border-olive text-muted">
         {status === "sent"
-          ? "Richiesta pronta. In futuro questo pulsante potra inviare la richiesta o aprire il pagamento."
-          : "Prossimo step: invio richiesta o pagamento, usando gli stessi dati della ricerca."}
+          ? t("common", "bookingNextSent")
+          : t("common", "bookingNextIdle")}
       </p>
     </div>
   );

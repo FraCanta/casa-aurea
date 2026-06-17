@@ -2,6 +2,7 @@ import { Icon } from "@iconify/react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+import { LocalizedText } from "@/components/LocalizedText";
 import {
   Reveal,
   SoftScale,
@@ -16,18 +17,9 @@ export const metadata: Metadata = {
 };
 
 const places = [
-  [
-    "Calette e mare lento",
-    "Acque chiare, sentieri costieri e giornate da vivere senza programmi rigidi.",
-  ],
-  [
-    "Borghi storici",
-    "Piazze, pietra chiara, botteghe e piccoli ristoranti per assaggiare il ritmo locale.",
-  ],
-  [
-    "Campagne e natura",
-    "Ulivi, muretti a secco, tramonti morbidi e strade secondarie da percorrere piano.",
-  ],
+  ["territoryPlaceOneTitle", "territoryPlaceOneText"],
+  ["territoryPlaceTwoTitle", "territoryPlaceTwoText"],
+  ["territoryPlaceThreeTitle", "territoryPlaceThreeText"],
 ];
 
 export default function TerritoryPage() {
@@ -36,15 +28,13 @@ export default function TerritoryPage() {
       <section className="grid min-h-[720px] items-end bg-paper px-6 pb-16 pt-36 md:grid-cols-2 md:px-[88px] md:pb-24 md:pt-48 fxl:px-[140px]">
         <Reveal>
           <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">
-            Il territorio
+            <LocalizedText namespace="pages" label="territoryEyebrow" />
           </p>
           <h1 className="max-w-[860px] font-serif text-[clamp(3rem,6vw,6.8rem)] font-normal leading-[0.95] tracking-[-0.01em] fxl:text-[5.5rem]">
-            Fuori dalla porta, il viaggio continua.
+            <LocalizedText namespace="pages" label="territoryTitle" />
           </h1>
           <p className="mt-6 max-w-[620px] text-base leading-7 text-muted ">
-            Una pagina pensata per raccontare cosa rende speciale un soggiorno
-            vicino a {siteConfig.locality}: mare, borghi, natura, sapori e
-            itinerari su misura.
+            <LocalizedText namespace="pages" label="territoryIntro" />
           </p>
         </Reveal>
         <SoftScale className="relative mt-10 min-h-[360px] overflow-hidden md:mt-0 md:min-h-[560px]">
@@ -68,9 +58,11 @@ export default function TerritoryPage() {
                 className="mb-5 text-2xl text-olive"
               />
               <h2 className="font-serif text-[clamp(2rem,3vw,3.2rem)] leading-none">
-                {title}
+                <LocalizedText namespace="pages" label={title} />
               </h2>
-              <p className="mt-5 text-sm leading-7 text-muted">{text}</p>
+              <p className="mt-5 text-sm leading-7 text-muted">
+                <LocalizedText namespace="pages" label={text} />
+              </p>
             </StaggerItem>
           ))}
         </StaggerReveal>
@@ -88,21 +80,19 @@ export default function TerritoryPage() {
         </SoftScale>
         <Reveal>
           <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">
-            Itinerari
+            <LocalizedText namespace="pages" label="territoryItinerariesEyebrow" />
           </p>
           <h2 className="font-serif text-[clamp(2.4rem,4vw,4.8rem)] leading-[1]">
-            Esperienze leggere, costruite intorno al tuo tempo.
+            <LocalizedText namespace="pages" label="territoryItinerariesTitle" />
           </h2>
           <p className="mt-6 text-base leading-7 text-muted">
-            Il template puo ospitare consigli locali, distanze, mappe, partner,
-            guide e percorsi consigliati: dalla spiaggia al borgo, dalla
-            degustazione alla cena privata.
+            <LocalizedText namespace="pages" label="territoryItinerariesText" />
           </p>
           <Link
             href="/esperienze"
             className="mt-7 inline-flex items-center gap-3 text-[0.68rem] font-black uppercase tracking-[0.13em]"
           >
-            Scopri le esperienze <Icon icon="ph:arrow-right" />
+            <LocalizedText namespace="home" label="experiencesCta" /> <Icon icon="ph:arrow-right" />
           </Link>
         </Reveal>
       </section>

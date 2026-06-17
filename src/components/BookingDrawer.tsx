@@ -113,8 +113,8 @@ export function BookingDrawer({
   const statusText = {
     idle: t("common", "bookingStatusIdle"),
     missing: t("common", "bookingStatusMissing"),
-    available: `${selectedAccommodation?.name} risulta disponibile. Puoi inviare la richiesta.`,
-    unavailable: `${selectedAccommodation?.name} non risulta disponibile per queste date.`,
+    available: `${selectedAccommodation?.name} ${t("common", "bookingAvailable")}`,
+    unavailable: `${selectedAccommodation?.name} ${t("common", "bookingUnavailable")}`,
     sent: t("common", "bookingStatusSent"),
   }[status];
 

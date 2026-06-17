@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LocalizedText } from "@/components/LocalizedText";
 
 export const metadata: Metadata = {
   title: "Cookie Policy",
@@ -11,8 +12,7 @@ export default function CookiePage() {
       <p className="eyebrow">Cookie</p>
       <h1>Cookie Policy</h1>
       <p className="lead">
-        Area predisposta per descrivere cookie tecnici, strumenti analytics,
-        preferenze di consenso e integrazioni esterne di booking o mappe.
+        <LocalizedText namespace="pages" label="cookieText" />
       </p>
     </main>
   );

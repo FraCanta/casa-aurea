@@ -2,6 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { useMemo, useState } from "react";
+import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import type { Accommodation } from "@/data/accommodations";
 
 const steps = ["01", "02", "03", "04", "05"];
@@ -9,12 +10,26 @@ const steps = ["01", "02", "03", "04", "05"];
 const guestOptions = ["1", "2", "3", "4", "5+"];
 const experienceOptions = ["mare", "centro-storico", "relax", "food", "natura"];
 const viewOptions = ["mare", "giardino", "centro", "campagna"];
+const experienceLabelKeys = {
+  mare: "optionSea",
+  "centro-storico": "optionOldTown",
+  relax: "optionRelax",
+  food: "optionFood",
+  natura: "optionNature",
+} as const;
+const viewLabelKeys = {
+  mare: "optionSea",
+  giardino: "optionGarden",
+  centro: "optionCenter",
+  campagna: "optionCountryside",
+} as const;
 
 export function StayFinder({
   accommodations,
 }: {
   accommodations: Accommodation[];
 }) {
+  const { t } = useLocaleCurrency();
   const [step, setStep] = useState(0);
   const [guests, setGuests] = useState("2");
   const [experience, setExperience] = useState("relax");
@@ -53,14 +68,13 @@ export function StayFinder({
     >
       <div className="bg-[linear-gradient(90deg,rgba(0,0,0,0.24),transparent)] px-6 py-16 md:px-[88px] md:py-24 fxl:px-[140px] fxl:py-32">
         <p className="mb-4 text-[0.62rem] font-black uppercase tracking-[0.18em] text-[#a49a70]">
-          Ti aiutiamo noi
+          {t("pages", "finderEyebrow")}
         </p>
         <h2 className="font-serif text-4xl font-medium 2xl:text-5xl fxl:text-6xl">
-          Trova il soggiorno perfetto per te.
+          {t("pages", "finderTitle")}
         </h2>
         <p className="mt-6  text-[0.98rem] leading-[1.75] text-white/70">
-          Rispondi a poche domande e ti suggeriamo la dimora piu adatta ai tuoi
-          desideri.
+          {t("pages", "finderText")}
         </p>
       </div>
       <div className="px-6 py-16 md:px-[88px] md:py-24 fxl:px-[110px] fxl:py-32">
@@ -78,7 +92,7 @@ export function StayFinder({
         {step === 0 && (
           <>
             <h3 className="font-serif text-3xl font-normal">
-              Quante persone siete?
+              {t("pages", "finderGuestsQuestion")}
             </h3>
             <div className="mt-7 grid grid-cols-5 gap-3">
               {guestOptions.map((value) => (
@@ -98,7 +112,7 @@ export function StayFinder({
         {step === 1 && (
           <>
             <h3 className="font-serif text-3xl font-normal">
-              Che esperienza cerchi?
+              {t("pages", "finderExperienceQuestion")}
             </h3>
             <div className="mt-7 grid grid-cols-2 gap-3 md:grid-cols-5">
               {experienceOptions.map((value) => (
@@ -108,7 +122,7 @@ export function StayFinder({
                   onClick={() => setExperience(value)}
                   key={value}
                 >
-                  {value.replace("-", " ")}
+                  {t("pages", experienceLabelKeys[value as keyof typeof experienceLabelKeys])}
                 </button>
               ))}
             </div>
@@ -118,7 +132,7 @@ export function StayFinder({
         {step === 2 && (
           <>
             <h3 className="font-serif text-3xl font-normal">
-              Che vista preferisci?
+              {t("pages", "finderViewQuestion")}
             </h3>
             <div className="mt-7 grid grid-cols-2 gap-3 md:grid-cols-4">
               {viewOptions.map((value) => (
@@ -128,7 +142,7 @@ export function StayFinder({
                   onClick={() => setView(value)}
                   key={value}
                 >
-                  {value}
+                  {t("pages", viewLabelKeys[value as keyof typeof viewLabelKeys])}
                 </button>
               ))}
             </div>
@@ -138,7 +152,7 @@ export function StayFinder({
         {step === 3 && (
           <>
             <h3 className="font-serif text-3xl font-normal">
-              Dettagli importanti?
+              {t("pages", "finderDetailsQuestion")}
             </h3>
             <div className="mt-7 grid gap-3 md:grid-cols-2">
               <button
@@ -146,14 +160,14 @@ export function StayFinder({
                 className={`btn btn-light !text-[0.8rem] min-h-11 px-3 ${pool ? "bg-[#91865a] text-white" : "bg-transparent"}`}
                 onClick={() => setPool((value) => !value)}
               >
-                Piscina
+                {t("pages", "finderPool")}
               </button>
               <button
                 type="button"
                 className={`btn btn-light !text-[0.8rem] min-h-11 px-3 ${pets ? "bg-[#91865a] text-white" : "bg-transparent"}`}
                 onClick={() => setPets((value) => !value)}
               >
-                Animali ammessi
+                {t("pages", "finderPets")}
               </button>
             </div>
           </>
@@ -162,17 +176,19 @@ export function StayFinder({
         {step === 4 && result && (
           <div className="border border-white/20 p-8">
             <span className="text-[0.62rem] font-black uppercase tracking-[0.18em] text-[#a49a70]">
-              La dimora suggerita
+              {t("pages", "finderResult")}
             </span>
             <h3 className="mt-4 font-serif text-4xl font-normal">
               {result.name}
             </h3>
-            <p className="mt-4 text-white/70">{result.claim}</p>
+            <p className="mt-4 text-white/70">
+              {t("alloggi", `${result.slug}.claim` as never)}
+            </p>
             <a
               className="btn btn-link mt-6 text-white"
               href={`/alloggi/${result.slug}`}
             >
-              Scopri la dimora <Icon icon="ph:arrow-right" />
+              {t("pages", "finderDiscover")} <Icon icon="ph:arrow-right" />
             </a>
           </div>
         )}
@@ -184,7 +200,7 @@ export function StayFinder({
             onClick={prevStep}
             disabled={step === 0}
           >
-            Indietro
+            {t("pages", "finderBack")}
           </button>
           <button
             type="button"
@@ -192,7 +208,7 @@ export function StayFinder({
             onClick={nextStep}
             disabled={step === steps.length - 1}
           >
-            Avanti <Icon icon="ph:arrow-right" />
+            {t("pages", "finderNext")} <Icon icon="ph:arrow-right" />
           </button>
         </div>
       </div>

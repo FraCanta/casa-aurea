@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { LocalizedText } from "@/components/LocalizedText";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -11,8 +12,7 @@ export default function PrivacyPage() {
       <p className="eyebrow">Privacy</p>
       <h1>Privacy Policy</h1>
       <p className="lead">
-        Template predisposto per inserire l'informativa sul trattamento dei dati personali,
-        richieste di disponibilita, newsletter e comunicazioni con gli ospiti.
+        <LocalizedText namespace="pages" label="privacyText" />
       </p>
     </main>
   );

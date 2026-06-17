@@ -24,10 +24,16 @@ export function AccommodationCard({ accommodation }: { accommodation: Accommodat
         />
       </Link>
       <div className="pb-4">
-        <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">{accommodation.type}</p>
+        <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">
+          <LocalizedText namespace="alloggi" label={`${accommodation.slug}.type`} />
+        </p>
         <h2 className="font-serif text-[clamp(2rem,3.5vw,4rem)] font-normal leading-[1] tracking-[-0.01em]">{accommodation.name}</h2>
-        <p className="mt-5 font-serif text-[clamp(1.25rem,1.8vw,2rem)] leading-[1.12]">{accommodation.claim}</p>
-        <p className="mt-4 max-w-[520px] text-base leading-7 text-muted">{accommodation.summary}</p>
+        <p className="mt-5 font-serif text-[clamp(1.25rem,1.8vw,2rem)] leading-[1.12]">
+          <LocalizedText namespace="alloggi" label={`${accommodation.slug}.claim`} />
+        </p>
+        <p className="mt-4 max-w-[520px] text-base leading-7 text-muted">
+          <LocalizedText namespace="alloggi" label={`${accommodation.slug}.summary`} />
+        </p>
         <div className="my-7 flex flex-wrap gap-3">
           <span className="inline-flex items-center gap-2 border-b border-ink/15 pb-1 text-[0.78rem] uppercase tracking-[0.08em] text-muted">
             <Icon icon="ph:users" className="text-base text-olive" />

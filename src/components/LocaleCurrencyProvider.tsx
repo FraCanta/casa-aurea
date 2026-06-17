@@ -12,14 +12,17 @@ import itCommon from "../../locales/it/common.json";
 import itHome from "../../locales/it/home.json";
 import itAlloggi from "../../locales/it/alloggi.json";
 import itCheckout from "../../locales/it/checkout.json";
+import itPages from "../../locales/it/pages.json";
 import enCommon from "../../locales/en/common.json";
 import enHome from "../../locales/en/home.json";
 import enAlloggi from "../../locales/en/alloggi.json";
 import enCheckout from "../../locales/en/checkout.json";
+import enPages from "../../locales/en/pages.json";
 import esCommon from "../../locales/es/common.json";
 import esHome from "../../locales/es/home.json";
 import esAlloggi from "../../locales/es/alloggi.json";
 import esCheckout from "../../locales/es/checkout.json";
+import esPages from "../../locales/es/pages.json";
 import type { CurrencyCode } from "@/lib/currency";
 import { fallbackExchangeRatesFromEur } from "@/lib/currency";
 
@@ -27,9 +30,9 @@ export type LocaleCode = "it" | "en" | "es";
 export type { CurrencyCode } from "@/lib/currency";
 
 const messages = {
-  it: { common: itCommon, home: itHome, alloggi: itAlloggi, checkout: itCheckout },
-  en: { common: enCommon, home: enHome, alloggi: enAlloggi, checkout: enCheckout },
-  es: { common: esCommon, home: esHome, alloggi: esAlloggi, checkout: esCheckout },
+  it: { common: itCommon, home: itHome, alloggi: itAlloggi, checkout: itCheckout, pages: itPages },
+  en: { common: enCommon, home: enHome, alloggi: enAlloggi, checkout: enCheckout, pages: enPages },
+  es: { common: esCommon, home: esHome, alloggi: esAlloggi, checkout: esCheckout, pages: esPages },
 };
 
 const localeFormatMap: Record<LocaleCode, string> = {

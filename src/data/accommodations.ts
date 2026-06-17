@@ -54,7 +54,7 @@ export const accommodations: Accommodation[] = [
     summary:
       "Villa indipendente per famiglie e gruppi, con giardino privato, piscina panoramica e zona pranzo esterna.",
     description:
-      "Villa Aurora e una villa in affitto pensata per chi cerca un soggiorno vicino a Val di Noto senza rinunciare a spazio, silenzio e comfort. Gli ambienti interni sono luminosi, la cucina e attrezzata e la zona notte garantisce privacy anche a due famiglie. All'esterno, piscina, veranda e giardino accompagnano giornate lente tra mare, borghi barocchi e cene sotto le stelle.",
+      "Villa Aurora è una villa in affitto pensata per chi cerca un soggiorno vicino alla località senza rinunciare a spazio, silenzio e comfort. Gli ambienti interni sono luminosi, la cucina è attrezzata e la zona notte garantisce privacy anche a due famiglie. All'esterno, piscina, veranda e giardino accompagnano giornate lente tra mare, borghi e cene sotto le stelle.",
     location: "Campagna panoramica, 8 minuti dal centro storico",
     guests: 8,
     bedrooms: 4,
@@ -112,7 +112,7 @@ export const accommodations: Accommodation[] = [
     summary:
       "Appartamento elegante per coppie o piccoli nuclei, a pochi passi da ristoranti, botteghe e monumenti.",
     description:
-      "Appartamento Scirocco e un appartamento vacanze ideale per un soggiorno vicino a Val di Noto con tutto a portata di mano. La zona living e accogliente, la camera matrimoniale e silenziosa e il balcone affaccia sulle strade chiare del centro. Perfetto per chi vuole muoversi a piedi, scoprire la cucina locale e raggiungere il mare in pochi minuti di auto.",
+      "Appartamento Scirocco è un appartamento vacanze ideale per un soggiorno vicino alla località con tutto a portata di mano. La zona living è accogliente, la camera matrimoniale è silenziosa e il balcone affaccia sulle strade chiare del centro. Perfetto per chi vuole muoversi a piedi, scoprire la cucina locale e raggiungere il mare in pochi minuti di auto.",
     location: "Centro storico, zona pedonale",
     guests: 3,
     bedrooms: 1,
@@ -170,7 +170,7 @@ export const accommodations: Accommodation[] = [
     summary:
       "Casa vacanza con terrazza, due camere e spazi comodi per famiglie che vogliono mare e relax.",
     description:
-      "Casa Maestrale e una casa vacanza con vista mare, nata per ospitare famiglie e amici in un ambiente pratico ma curato. La terrazza e il cuore della casa: qui si fa colazione, si legge al rientro dalla spiaggia e si cena con la brezza della sera. Le spiagge sono vicine, mentre borghi, riserve naturali e cantine rendono ogni giornata diversa.",
+      "Casa Maestrale è una casa vacanza con vista mare, nata per ospitare famiglie e amici in un ambiente pratico ma curato. La terrazza è il cuore della casa: qui si fa colazione, si legge al rientro dalla spiaggia e si cena con la brezza della sera. Le spiagge sono vicine, mentre borghi, riserve naturali e cantine rendono ogni giornata diversa.",
     location: "Zona mare, 450 metri dalla spiaggia",
     guests: 5,
     bedrooms: 2,

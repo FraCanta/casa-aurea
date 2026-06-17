@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { BookingProvider } from "@/components/BookingState";
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
 import { SmoothScroll } from "@/components/SmoothScroll";
@@ -28,11 +29,13 @@ export default function RootLayout({
   return (
     <html lang="it">
       <body>
-        <SmoothScroll>
-          <Header />
-          {children}
-          <Footer />
-        </SmoothScroll>
+        <BookingProvider>
+          <SmoothScroll>
+            <Header />
+            {children}
+            <Footer />
+          </SmoothScroll>
+        </BookingProvider>
       </body>
     </html>
   );

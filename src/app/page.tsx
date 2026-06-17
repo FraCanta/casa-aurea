@@ -45,7 +45,7 @@ export default function HomePage() {
     <main className="noto-home">
       <LodgingStructuredData />
 
-      <section className="relative min-h-[650px] overflow-visible bg-[#12150f] text-white md:min-h-[720px] fxl:min-h-[860px]">
+      <section className="relative flex min-h-svh flex-col justify-center overflow-visible bg-[#12150f] pb-20 text-white md:min-h-[720px] md:justify-start md:pb-0 fxl:min-h-[860px]">
         <Image
           src="/images/hero-pool-sea.png"
           alt={`Dimora autentica con piscina e vista a ${siteConfig.locality}`}
@@ -55,19 +55,19 @@ export default function HomePage() {
           className="object-cover object-center brightness-[0.72] saturate-[0.85]"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(12,15,12,0.32),rgba(12,15,12,0.14)_42%,rgba(12,15,12,0.48)),linear-gradient(90deg,rgba(12,15,12,0.64),rgba(12,15,12,0.34)_36%,rgba(12,15,12,0.08)_76%)]" />
-        <Reveal className="relative z-10 ml-5 w-[min(430px,calc(100%-2.5rem))] pt-[138px] md:ml-[88px] md:pt-[220px] fxl:ml-[140px] 2xl:w-[560px] fxl:pt-[290px]">
-          <h1 className="font-serif text-[clamp(3.55rem,15vw,4.7rem)] font-normal leading-[0.9] tracking-[-0.015em] md:text-[4.35rem] 2xl:text-[6rem] fxl:text-[6rem]">
-            Il tuo tempo.
-            <br />
-            Il tuo luogo.
+        <Reveal className="relative z-10 mx-auto w-[min(430px,calc(100%-2rem))] pt-24 text-center md:w-[min(760px,calc(100%-11rem))] md:pt-[220px] fxl:w-[900px] fxl:pt-[290px]">
+          <h1 className="mb-5 text-[0.8rem] font-black uppercase tracking-[0.22em] text-white/80">
+            Casa Aurea
           </h1>
-          <p className="mt-5 w-[min(360px,100%)] text-[0.9rem] leading-[1.55] text-white/85 2xl:w-[460px] 2xl:text-[1.05rem]">
-            Dimore autentiche tra mare, pietra e natura, da adattare alla tua
-            destinazione.
+          <h2 className="font-serif text-3xl font-normal md:text-[4.7rem] 2xl:text-[6rem] fxl:text-[5rem]">
+            La tua prossima
+            <br />
+            vacanza comincia da qui.
+          </h2>
+          <p className="mx-auto mt-5 w-[min(390px,100%)] text-[0.9rem] leading-[1.55] text-white/85 2xl:w-[520px] 2xl:text-[1.05rem]">
+            Dimore accoglienti, esperienze locali e disponibilita in tempo reale
+            per scegliere subito il tuo soggiorno.
           </p>
-          <Link href="/alloggi" className="btn btn-link mt-6 fxl:mt-8">
-            Scopri le dimore <Icon icon="ph:arrow-right" />
-          </Link>
         </Reveal>
 
         <HeroBookingPanel accommodations={accommodations} />
@@ -90,7 +90,7 @@ export default function HomePage() {
             Scopri di più <Icon icon="ph:arrow-right" />
           </Link>
         </Reveal>
-        <SoftScale className="relative min-h-75 overflow-hidden md:min-h-115">
+        <SoftScale className="relative overflow-hidden min-h-75 md:min-h-115">
           <Image
             src="/images/courtyard-pool.png"
             alt={`Corte con piscina e pietra naturale a ${siteConfig.locality}`}
@@ -102,7 +102,7 @@ export default function HomePage() {
       </section>
 
       <section className="bg-[#f0ebe2] px-6 py-20 md:px-22 md:py-28 fxl:px-35 fxl:py-36">
-        <div className="mb-9 flex flex-col gap-5 md:flex-row items-start md:items-end md:justify-between">
+        <div className="flex flex-col items-start gap-5 mb-9 md:flex-row md:items-end md:justify-between">
           <div>
             <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-[#8e8456]">
               Dove vorresti soggiornare?
@@ -130,7 +130,7 @@ export default function HomePage() {
                 />
               </div>
               <Link
-                className="flex flex-col gap-x-4 gap-y-2 p-5"
+                className="flex flex-col p-5 gap-x-4 gap-y-2"
                 href={`/alloggi/${stay.slug}`}
               >
                 <strong className="text-base font-black uppercase ">
@@ -172,7 +172,7 @@ export default function HomePage() {
             Scopri le esperienze <Icon icon="ph:arrow-right" />
           </Link>
         </Reveal>
-        <StaggerReveal className="mt-10 grid gap-7 md:col-span-2 md:grid-cols-5">
+        <StaggerReveal className="grid mt-10 gap-7 md:col-span-2 md:grid-cols-5">
           {experienceItems.map(([title, text]) => (
             <StaggerItem className="grid gap-2" key={title}>
               <strong className="text-sm font-bold">{title}</strong>
@@ -217,11 +217,11 @@ export default function HomePage() {
           <p className="mt-6 max-w-[440px] text-base leading-7 text-[#5d5a50]">
             Scegli la modalità che preferisci.
           </p>
-          <div className="mt-8 grid gap-3">
+          <div className="grid gap-3 mt-8">
             <BookingDrawer
               accommodations={accommodations}
               trigger={
-                <span className="btn btn-secondary w-full justify-between">
+                <span className="justify-between w-full btn btn-secondary">
                   Prenota ora <Icon icon="ph:arrow-right" />
                 </span>
               }
@@ -229,7 +229,7 @@ export default function HomePage() {
             <BookingDrawer
               accommodations={accommodations}
               trigger={
-                <span className="btn btn-secondary w-full justify-between">
+                <span className="justify-between w-full btn btn-secondary">
                   Richiedi disponibilita <Icon icon="ph:arrow-right" />
                 </span>
               }
@@ -240,7 +240,6 @@ export default function HomePage() {
           <BookingForm accommodations={accommodations} />
         </SoftScale>
       </section> */}
-
     </main>
   );
 }

@@ -1,12 +1,20 @@
 "use client";
 
 import { Icon } from "@iconify/react";
-import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { FormEvent, ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
+import { useBookingState } from "@/components/BookingState";
 import type { Accommodation } from "@/data/accommodations";
 
 type DrawerStatus = "idle" | "missing" | "available" | "unavailable" | "sent";
+
+const months = [
+  { label: "Giugno 2026", year: 2026, month: 5 },
+  { label: "Luglio 2026", year: 2026, month: 6 },
+];
+
+const weekdays = ["Lun", "Mar", "Mer", "Gio", "Ven", "Sab", "Dom"];
 
 export function BookingDrawer({
   accommodations,
@@ -22,19 +30,49 @@ export function BookingDrawer({
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [status, setStatus] = useState<DrawerStatus>("idle");
-  const [selected, setSelected] = useState(selectedSlug ?? accommodations[0]?.slug ?? "");
-  const [checkin, setCheckin] = useState("");
-  const [checkout, setCheckout] = useState("");
-  const [guests, setGuests] = useState("2");
+  const {
+    selectedSlug: storedSlug,
+    checkin,
+    checkout,
+    guests,
+    setSelectedSlug,
+    setCheckin,
+    setCheckout,
+    setGuests,
+    resetBooking,
+  } = useBookingState();
+
+  const activeSlug = selectedSlug || storedSlug || accommodations[0]?.slug || "";
 
   const selectedAccommodation = useMemo(
-    () => accommodations.find((item) => item.slug === selected),
-    [accommodations, selected]
+    () => accommodations.find((item) => item.slug === activeSlug),
+    [accommodations, activeSlug],
   );
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  function openDrawer() {
+    if (selectedSlug) setSelectedSlug(selectedSlug);
+    if (!storedSlug && !selectedSlug && accommodations[0]) {
+      setSelectedSlug(accommodations[0].slug);
+    }
+    onOpen?.();
+    setOpen(true);
+  }
+
+  function selectDate(date: string) {
+    setStatus("idle");
+
+    if (!checkin || (checkin && checkout) || date <= checkin) {
+      setCheckin(date);
+      setCheckout("");
+      return;
+    }
+
+    setCheckout(date);
+  }
 
   function checkAvailability() {
     if (!checkin || !checkout || !selectedAccommodation) {
@@ -42,31 +80,35 @@ export function BookingDrawer({
       return;
     }
 
-    if (selectedAccommodation.availability === "available") setStatus("available");
-    if (selectedAccommodation.availability === "unavailable") setStatus("unavailable");
-    if (selectedAccommodation.availability === "request") setStatus("idle");
-  }
+    if (selectedAccommodation.availability === "available") {
+      setStatus("available");
+      return;
+    }
 
-  function submitRequest(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+    if (selectedAccommodation.availability === "unavailable") {
+      setStatus("unavailable");
+      return;
+    }
+
     setStatus("sent");
   }
+
+  const statusText = {
+    idle: "Scegli dimora, ospiti e date: questi dati restano sincronizzati con il futuro booking engine.",
+    missing: "Seleziona check-in e check-out per continuare.",
+    available: `${selectedAccommodation?.name} risulta disponibile. Puoi inviare la richiesta.`,
+    unavailable: `${selectedAccommodation?.name} non risulta disponibile per queste date.`,
+    sent: "Richiesta pronta: quando collegherai booking engine o iCal, useremo gli stessi dati.",
+  }[status];
 
   return (
     <>
       <button
         type="button"
-        onClick={() => {
-          onOpen?.();
-          setOpen(true);
-        }}
+        onClick={openDrawer}
         className="inline-flex cursor-pointer border-0 bg-transparent p-0 text-left text-inherit"
       >
-        {trigger ?? (
-          <span className="btn btn-accent">
-            Prenota ora
-          </span>
-        )}
+        {trigger ?? <span className="btn btn-accent">Prenota ora</span>}
       </button>
 
       {mounted &&
@@ -76,92 +118,273 @@ export function BookingDrawer({
               <motion.div className="fixed inset-0 z-[9999]">
                 <motion.button
                   type="button"
-                  aria-label="Chiudi drawer prenotazione"
-                  className="absolute inset-0 bg-black/45"
+                  aria-label="Chiudi selezione date"
+                  className="absolute inset-0 bg-ink/45"
                   onClick={() => setOpen(false)}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  transition={{ duration: 0.28 }}
                 />
+
                 <motion.aside
-                  className="absolute right-0 top-0 h-full w-full max-w-[560px] overflow-y-auto bg-paper p-6 text-ink shadow-2xl md:p-10"
-                  initial={{ x: "100%", opacity: 0.86 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  exit={{ x: "100%", opacity: 0.86 }}
-                  transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0 h-dvh overflow-y-auto bg-paper text-ink"
+                  initial={{ y: 24, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 24, opacity: 0 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 >
-            <div className="flex items-start justify-between gap-6">
-              <div>
-                <p className="mb-3 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">
-                  Prenota il tuo soggiorno
-                </p>
-                <p className="font-serif text-[clamp(2.3rem,4vw,4rem)] leading-[1]">
-                  Richiesta disponibilita.
-                </p>
-              </div>
-              <button type="button" className="grid h-10 w-10 place-items-center border border-ink/15" onClick={() => setOpen(false)} aria-label="Chiudi">
-                <Icon icon="ph:x" />
-              </button>
-            </div>
+                  <div className="border-b border-ink/10 px-5 py-4 md:hidden">
+                    <div className="grid grid-cols-[44px_1fr_44px] items-center">
+                      <button
+                        type="button"
+                        className="grid h-10 w-10 place-items-center"
+                        onClick={() => setOpen(false)}
+                        aria-label="Chiudi"
+                      >
+                        <Icon icon="ph:x" className="text-xl" />
+                      </button>
+                      <h2 className="text-center text-base font-bold">
+                        Seleziona date
+                      </h2>
+                    </div>
+                  </div>
 
-            <form className="mt-9 grid gap-5" onSubmit={submitRequest}>
-              <label className="grid gap-2 text-[0.62rem] font-black uppercase tracking-[0.1em]">
-                Alloggio
-                <select className="border-0 border-b border-ink/15 bg-transparent py-3 outline-none" value={selected} onChange={(event) => setSelected(event.target.value)}>
-                  {accommodations.map((item) => (
-                    <option value={item.slug} key={item.slug}>
-                      {item.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
+                  <div className="hidden px-8 py-7 md:block fxl:px-[140px]">
+                    <div className="mb-7 flex items-center justify-between">
+                      <div>
+                        <p className="text-[0.62rem] font-black uppercase tracking-[0.16em] text-olive">
+                          Prenota il tuo soggiorno
+                        </p>
+                        <h2 className="mt-2 font-serif text-[clamp(2.4rem,4vw,4.4rem)] leading-[1]">
+                          Seleziona le date.
+                        </h2>
+                      </div>
+                      <button
+                        type="button"
+                        className="grid h-12 w-12 place-items-center border border-ink/15"
+                        onClick={() => setOpen(false)}
+                        aria-label="Chiudi"
+                      >
+                        <Icon icon="ph:x" className="text-xl" />
+                      </button>
+                    </div>
+                    <div className="grid grid-cols-[1fr_1fr_0.8fr_56px] items-center rounded-full bg-white shadow-[0_16px_42px_rgba(23,27,20,0.12)]">
+                      <SearchField label="Dimora">
+                        <select
+                          value={activeSlug}
+                          onChange={(event) => setSelectedSlug(event.target.value)}
+                          className="w-full border-0 bg-transparent text-sm outline-none"
+                        >
+                          {accommodations.map((item) => (
+                            <option key={item.slug} value={item.slug}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </SearchField>
+                      <SearchField label="Date">
+                        <span className="text-sm">
+                          {checkin || "Check-in"}{" "}
+                          <span className="text-muted">-</span>{" "}
+                          {checkout || "Check-out"}
+                        </span>
+                      </SearchField>
+                      <SearchField label="Ospiti">
+                        <select
+                          value={guests}
+                          onChange={(event) => setGuests(event.target.value)}
+                          className="w-full border-0 bg-transparent text-sm outline-none"
+                        >
+                          <option value="2">2 ospiti</option>
+                          <option value="4">4 ospiti</option>
+                          <option value="6">6 ospiti</option>
+                          <option value="8">8 ospiti</option>
+                        </select>
+                      </SearchField>
+                      <button
+                        type="button"
+                        className="mr-2 grid h-12 w-12 place-items-center rounded-full bg-terracotta text-white"
+                        onClick={checkAvailability}
+                        aria-label="Verifica disponibilita"
+                      >
+                        <Icon icon="ph:magnifying-glass" className="text-xl" />
+                      </button>
+                    </div>
+                  </div>
 
-              <div className="grid gap-5 md:grid-cols-2">
-                <label className="grid gap-2 text-[0.62rem] font-black uppercase tracking-[0.1em]">
-                  Check-in
-                  <input className="border-0 border-b border-ink/15 bg-transparent py-3 outline-none" required type="date" value={checkin} onChange={(event) => setCheckin(event.target.value)} />
-                </label>
-                <label className="grid gap-2 text-[0.62rem] font-black uppercase tracking-[0.1em]">
-                  Check-out
-                  <input className="border-0 border-b border-ink/15 bg-transparent py-3 outline-none" required type="date" value={checkout} onChange={(event) => setCheckout(event.target.value)} />
-                </label>
-              </div>
+                  <div className="grid gap-5 px-5 py-5 md:hidden">
+                    <label className="grid gap-2">
+                      <span className="text-xs font-bold">Ospiti</span>
+                      <span className="flex min-h-12 items-center gap-3 border border-ink/15 bg-white px-4">
+                        <Icon icon="ph:users" className="text-muted" />
+                        <select
+                          value={guests}
+                          onChange={(event) => setGuests(event.target.value)}
+                          className="w-full border-0 bg-transparent outline-none"
+                        >
+                          <option value="2">2 ospiti</option>
+                          <option value="4">4 ospiti</option>
+                          <option value="6">6 ospiti</option>
+                          <option value="8">8 ospiti</option>
+                        </select>
+                      </span>
+                    </label>
+                    <label className="grid gap-2">
+                      <span className="text-xs font-bold">Dimora</span>
+                      <span className="flex min-h-12 items-center gap-3 border border-ink/15 bg-white px-4">
+                        <Icon icon="ph:house-line" className="text-muted" />
+                        <select
+                          value={activeSlug}
+                          onChange={(event) => setSelectedSlug(event.target.value)}
+                          className="w-full border-0 bg-transparent outline-none"
+                        >
+                          {accommodations.map((item) => (
+                            <option key={item.slug} value={item.slug}>
+                              {item.name}
+                            </option>
+                          ))}
+                        </select>
+                      </span>
+                    </label>
+                  </div>
 
-              <label className="grid gap-2 text-[0.62rem] font-black uppercase tracking-[0.1em]">
-                Ospiti
-                <input className="border-0 border-b border-ink/15 bg-transparent py-3 outline-none" min="1" max="14" required type="number" value={guests} onChange={(event) => setGuests(event.target.value)} />
-              </label>
+                  <div className="bg-white px-5 py-7 md:mx-8 md:grid md:grid-cols-2 md:gap-12 md:px-10 md:py-10 fxl:mx-[140px]">
+                    {months.map((month) => (
+                      <CalendarMonth
+                        key={month.label}
+                        month={month.month}
+                        year={month.year}
+                        label={month.label}
+                        checkin={checkin}
+                        checkout={checkout}
+                        onSelect={selectDate}
+                      />
+                    ))}
+                  </div>
 
-              <label className="grid gap-2 text-[0.62rem] font-black uppercase tracking-[0.1em]">
-                Messaggio
-                <textarea className="min-h-28 border-0 border-b border-ink/15 bg-transparent py-3 outline-none" placeholder="Raccontaci esigenze, orario di arrivo, bambini, animali o richieste speciali." />
-              </label>
-
-              <div className="border-l-2 border-olive py-2 pl-4 text-sm leading-6 text-muted" role="status" aria-live="polite">
-                {status === "idle" && "Inserisci date e ospiti per controllare la richiesta o inviala direttamente."}
-                {status === "missing" && "Aggiungi check-in e check-out per verificare disponibilita."}
-                {status === "available" && `${selectedAccommodation?.name} risulta disponibile: puoi inviare la richiesta.`}
-                {status === "unavailable" && `${selectedAccommodation?.name} non risulta disponibile: prova altre date o un'altra dimora.`}
-                {status === "sent" && "Richiesta inviata. Ti risponderemo con conferma, prezzo finale e dettagli del soggiorno."}
-              </div>
-
-              <div className="grid gap-3">
-                <button type="button" className="btn btn-secondary w-full" onClick={checkAvailability}>
-                  Verifica disponibilita
-                </button>
-                <button type="submit" className="btn btn-primary w-full">
-                  Invia richiesta
-                </button>
-              </div>
-
-            </form>
+                  <div className="sticky bottom-0 flex items-center justify-between gap-4 border-t border-ink/10 bg-paper px-5 pb-[calc(1rem+env(safe-area-inset-bottom))] pt-4 md:px-8 md:pb-6 fxl:px-[140px]">
+                    <button
+                      type="button"
+                      className="text-xs font-black underline underline-offset-4"
+                      onClick={() => {
+                        resetBooking();
+                        setStatus("idle");
+                      }}
+                    >
+                      Cancella
+                    </button>
+                    <p className="hidden flex-1 text-xs leading-5 text-muted md:block">
+                      {statusText}
+                    </p>
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      onClick={checkAvailability}
+                    >
+                      Verifica disponibilita
+                    </button>
+                  </div>
+                  <p
+                    className="px-5 pb-4 text-xs leading-5 text-muted md:hidden"
+                    role="status"
+                    aria-live="polite"
+                  >
+                    {statusText}
+                  </p>
                 </motion.aside>
               </motion.div>
             )}
           </AnimatePresence>,
-          document.body
+          document.body,
         )}
     </>
   );
+}
+
+function SearchField({
+  label,
+  children,
+}: {
+  label: string;
+  children: ReactNode;
+}) {
+  return (
+    <label className="grid gap-1 border-r border-ink/10 px-7 py-4 last:border-r-0">
+      <span className="text-[0.58rem] font-black uppercase tracking-[0.12em] text-ink">
+        {label}
+      </span>
+      {children}
+    </label>
+  );
+}
+
+function CalendarMonth({
+  month,
+  year,
+  label,
+  checkin,
+  checkout,
+  onSelect,
+}: {
+  month: number;
+  year: number;
+  label: string;
+  checkin: string;
+  checkout: string;
+  onSelect: (date: string) => void;
+}) {
+  const cells = getCalendarCells(year, month);
+
+  return (
+    <div>
+      <h3 className="mb-5 text-center text-base font-black">{label}</h3>
+      <div className="grid grid-cols-7 gap-1 text-center text-xs">
+        {weekdays.map((day) => (
+          <span className="mb-3 font-bold text-muted" key={day}>
+            {day}
+          </span>
+        ))}
+        {cells.map((cell, index) =>
+          cell ? (
+            <button
+              key={cell}
+              type="button"
+              onClick={() => onSelect(cell)}
+              className={`grid h-10 place-items-center rounded-md text-sm transition ${
+                isSelected(cell, checkin, checkout)
+                  ? "bg-ivory text-ink ring-1 ring-olive/25"
+                  : cell === checkin || cell === checkout
+                    ? "bg-ivory text-ink ring-1 ring-olive/35"
+                    : "hover:bg-ink/6"
+              }`}
+            >
+              {Number(cell.slice(-2))}
+            </button>
+          ) : (
+            <span key={`empty-${index}`} />
+          ),
+        )}
+      </div>
+    </div>
+  );
+}
+
+function getCalendarCells(year: number, month: number) {
+  const firstDay = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const mondayOffset = (firstDay.getDay() + 6) % 7;
+  const cells: Array<string | null> = Array.from({ length: mondayOffset }, () => null);
+
+  for (let day = 1; day <= daysInMonth; day += 1) {
+    const value = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+    cells.push(value);
+  }
+
+  return cells;
+}
+
+function isSelected(date: string, checkin: string, checkout: string) {
+  if (!checkin || !checkout) return false;
+  return date >= checkin && date <= checkout;
 }

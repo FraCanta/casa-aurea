@@ -35,18 +35,18 @@ export function GalleryLightbox({
       >
         <motion.button
           type="button"
-          className="relative min-h-[420px] overflow-hidden text-left md:min-h-[720px]"
+          className="relative min-h-[56svh] overflow-hidden text-left md:min-h-[720px]"
           onClick={() => setActiveIndex(0)}
           whileHover={{ scale: 0.995 }}
           transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
         >
           <Image className="object-cover transition-transform duration-700 hover:scale-[1.025]" src={images[0]} alt={`${altBase}, immagine principale`} fill priority sizes="(max-width: 980px) 100vw, 64vw" />
-          <span className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 bg-black/45 px-3 py-2 text-[0.46rem] font-black uppercase tracking-[0.14em] text-white backdrop-blur">
-            <Icon icon="ph:magnifying-glass-plus" className="text-[0.72rem]" />
-            Ingrandisci
+          <span className="absolute bottom-4 right-4 inline-flex items-center gap-1.5 bg-paper/92 px-3 py-2 text-[0.55rem] font-black uppercase tracking-[0.1em] text-ink shadow-xl backdrop-blur md:bg-black/45 md:text-[0.5rem] md:tracking-[0.12em] md:text-white">
+            <Icon icon="ph:squares-four" className="text-[0.82rem]" />
+            Mostra tutte le foto
           </span>
         </motion.button>
-        <div className="grid gap-3">
+        <div className="hidden gap-3 md:grid">
           {images.slice(1, 3).map((image, index) => (
             <motion.button
               type="button"

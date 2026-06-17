@@ -149,15 +149,6 @@ export function Header() {
                 ))}
               </div>
 
-              <div className="mt-8">
-                <BookingDrawer
-                  accommodations={accommodations}
-                  onOpen={() => setIsOpen(false)}
-                  trigger={
-                    <span className="btn btn-accent w-full">Prenota ora</span>
-                  }
-                />
-              </div>
             </motion.nav>
           </motion.div>
         )}

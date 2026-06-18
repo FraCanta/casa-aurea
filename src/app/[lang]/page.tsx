@@ -13,6 +13,7 @@ import { PriceText } from "@/components/PriceText";
 import { LodgingStructuredData } from "@/components/StructuredData";
 import { StayFinder } from "@/components/StayFinder";
 import { accommodations } from "@/data/accommodations";
+import { hasLocale } from "@/i18n/routing";
 import { siteConfig } from "@/lib/site";
 
 const stays = accommodations.slice(0, 3);
@@ -31,14 +32,21 @@ const reviews = [
   ["reviewThree", "reviewThreeAuthor"],
 ];
 
-export default function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ lang: string }>;
+}) {
+  const { lang } = await params;
+  const locale = hasLocale(lang) ? lang : "it";
+
   return (
     <main className="noto-home">
-      <LodgingStructuredData />
+      <LodgingStructuredData locale={locale} />
 
       <section className="relative flex min-h-svh flex-col justify-center overflow-visible bg-[#12150f] pb-20 text-white md:min-h-[720px] md:justify-start md:pb-0 fxl:min-h-[860px]">
         <Image
-          src="/images/hero-pool-sea.png"
+          src="/images/hero-pool-sea.webp"
           alt={`Dimora autentica con piscina e vista a ${siteConfig.locality}`}
           fill
           priority
@@ -79,7 +87,7 @@ export default function HomePage() {
         </Reveal>
         <SoftScale className="relative overflow-hidden min-h-75 md:min-h-115">
           <Image
-            src="/images/courtyard-pool.png"
+            src="/images/courtyard-pool.webp"
             alt={`Corte con piscina e pietra naturale a ${siteConfig.locality}`}
             fill
             sizes="(max-width: 900px) 100vw, 52vw"
@@ -168,7 +176,7 @@ export default function HomePage() {
       <section className="grid bg-[#fbf8f1] px-6 py-20 md:grid-cols-[1.05fr_0.95fr] md:px-[88px] md:py-28 fxl:px-[140px] fxl:py-36">
         <SoftScale className="relative min-h-77.5 overflow-hidden md:min-h-117.5">
           <Image
-            src="/images/coast-town.png"
+            src="/images/coast-town.webp"
             alt={`Territorio, borghi e mare vicino a ${siteConfig.locality}`}
             fill
             sizes="(max-width: 900px) 100vw, 52vw"

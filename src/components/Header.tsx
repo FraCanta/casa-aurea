@@ -35,10 +35,6 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [pathname]);
 
-  useEffect(() => {
-    setIsOpen(false);
-  }, [pathname]);
-
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 grid grid-cols-[1fr_auto] items-center px-5 py-4 transition-all duration-500 lg:grid-cols-[260px_1fr_260px] lg:px-[88px] lg:py-7 fxl:grid-cols-[330px_1fr_330px] fxl:px-[140px] ${

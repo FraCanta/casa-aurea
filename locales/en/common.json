@@ -1,4 +1,8 @@
 {
+  "loading": "Loading",
+  "errorTitle": "Something went wrong.",
+  "errorText": "Try again in a moment. If the problem continues, return to the home page.",
+  "retry": "Try again",
   "languageCurrency": "Language & currency",
   "language": "Language",
   "currency": "Currency",

@@ -34,7 +34,7 @@ export default function ExperiencesPage() {
         <div className="grid items-center gap-10 md:grid-cols-[0.95fr_1.05fr]">
           <div className="relative min-h-[360px] overflow-hidden md:min-h-[620px]">
             <Image
-              src="/images/coast-town.png"
+              src="/images/coast-town.webp"
               alt={`Borghi e costa vicino a ${siteConfig.locality}`}
               fill
               sizes="(max-width: 980px) 100vw, 50vw"

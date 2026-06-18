@@ -1,4 +1,8 @@
 {
+  "loading": "Caricamento in corso",
+  "errorTitle": "Qualcosa non ha funzionato.",
+  "errorText": "Riprova tra qualche istante. Se il problema continua, torna alla pagina iniziale.",
+  "retry": "Riprova",
   "languageCurrency": "Lingua e valuta",
   "language": "Lingua",
   "currency": "Valuta",

@@ -10,8 +10,6 @@ import { getDictionary } from "@/i18n/dictionaries";
 import { hasLocale, locales } from "@/i18n/routing";
 import { siteConfig } from "@/lib/site";
 
-const siteUrl = "https://www.casaaurea.it";
-
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
 }
@@ -24,11 +22,11 @@ export async function generateMetadata({
 
   const dictionary = await getDictionary(lang);
   const languages = Object.fromEntries(
-    locales.map((locale) => [locale, `${siteUrl}/${locale}`]),
+    locales.map((locale) => [locale, `${siteConfig.url}/${locale}`]),
   );
 
   return {
-    metadataBase: new URL(siteUrl),
+    metadataBase: new URL(siteConfig.url),
     title: {
       default: dictionary.pages.siteMetaTitle,
       template: `%s | ${siteConfig.name}`,
@@ -36,7 +34,7 @@ export async function generateMetadata({
     description: dictionary.pages.siteMetaDescription,
     alternates: {
       canonical: `/${lang}`,
-      languages,
+      languages: { ...languages, "x-default": `${siteConfig.url}/it` },
     },
     openGraph: {
       title: dictionary.pages.siteMetaOgTitle,
@@ -49,7 +47,22 @@ export async function generateMetadata({
           locale === "en" ? "en_US" : locale === "es" ? "es_ES" : "it_IT",
         ),
       url: `/${lang}`,
+      images: [
+        {
+          url: siteConfig.defaultOgImage,
+          width: 1200,
+          height: 630,
+          alt: `${siteConfig.name} — ospitalità boutique`,
+        },
+      ],
     },
+    twitter: {
+      card: "summary_large_image",
+      title: dictionary.pages.siteMetaOgTitle,
+      description: dictionary.pages.siteMetaOgDescription,
+      images: [siteConfig.defaultOgImage],
+    },
+    manifest: "/manifest.json",
   };
 }
 

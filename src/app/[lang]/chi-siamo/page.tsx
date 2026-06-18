@@ -39,7 +39,7 @@ export default function AboutPage() {
         </Reveal>
         <SoftScale className="relative mt-10 min-h-[360px] overflow-hidden md:mt-0 md:min-h-[560px]">
           <Image
-            src="/images/stone-bath.png"
+            src="/images/stone-bath.webp"
             alt={`Dettagli di ospitalità e materiali naturali di ${siteConfig.name}`}
             fill
             priority
@@ -52,7 +52,7 @@ export default function AboutPage() {
       <section className="grid items-center gap-10 bg-ivory px-6 py-20 md:grid-cols-[1fr_1fr] md:px-[88px] md:py-28 fxl:px-[140px] fxl:py-36">
         <SoftScale className="relative min-h-[380px] overflow-hidden md:min-h-[560px]">
           <Image
-            src="/images/kitchen-sea.png"
+            src="/images/kitchen-sea.webp"
             alt={`Spazi conviviali e vista nella struttura ${siteConfig.name}`}
             fill
             sizes="(max-width: 900px) 100vw, 52vw"

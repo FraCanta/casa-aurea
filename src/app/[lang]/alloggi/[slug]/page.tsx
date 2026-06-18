@@ -81,11 +81,11 @@ export default async function AccommodationDetailPage({
   params,
   searchParams,
 }: PageProps) {
-  const { slug } = await params;
+  const { lang, slug } = await params;
   const bookingSearch = await searchParams;
   const accommodation = getAccommodation(slug);
 
-  if (!accommodation) {
+  if (!accommodation || !hasLocale(lang)) {
     notFound();
   }
 
@@ -97,7 +97,7 @@ export default async function AccommodationDetailPage({
         checkout={bookingSearch?.checkout}
         guests={bookingSearch?.guests}
       />
-      <LodgingStructuredData accommodation={accommodation} />
+      <LodgingStructuredData accommodation={accommodation} locale={lang} />
       <section className="bg-ivory px-5 pb-0 pt-28 md:px-[88px] md:pt-48 fxl:px-[140px]">
         <GalleryLightbox
           images={[accommodation.featuredImage, ...accommodation.gallery]}

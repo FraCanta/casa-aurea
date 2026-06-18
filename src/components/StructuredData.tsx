@@ -1,20 +1,32 @@
 import type { Accommodation } from "@/data/accommodations";
+import { localizedPath } from "@/i18n/metadata";
+import type { Locale } from "@/i18n/routing";
 import { siteConfig } from "@/lib/site";
 
-export function LodgingStructuredData({ accommodation }: { accommodation?: Accommodation }) {
+function absoluteUrl(pathname: string) {
+  return new URL(pathname, siteConfig.url).toString();
+}
+
+export function LodgingStructuredData({
+  accommodation,
+  locale,
+}: {
+  accommodation?: Accommodation;
+  locale: Locale;
+}) {
   const data = accommodation
     ? {
         "@context": "https://schema.org",
         "@type": "VacationRental",
         name: accommodation.name,
         description: accommodation.description,
-        image: [accommodation.featuredImage, ...accommodation.gallery],
+        image: [accommodation.featuredImage, ...accommodation.gallery].map(absoluteUrl),
         address: {
           "@type": "PostalAddress",
           streetAddress: siteConfig.address,
           addressLocality: siteConfig.locality,
           addressRegion: siteConfig.region,
-          addressCountry: "IT"
+          addressCountry: siteConfig.countryCode
         },
         geo: {
           "@type": "GeoCoordinates",
@@ -31,7 +43,7 @@ export function LodgingStructuredData({ accommodation }: { accommodation?: Accom
           "@type": "QuantitativeValue",
           maxValue: accommodation.guests
         },
-        url: `/alloggi/${accommodation.slug}`,
+        url: absoluteUrl(localizedPath(locale, `/alloggi/${accommodation.slug}`)),
         priceRange: `Da € ${accommodation.priceFrom} a notte`
       }
     : {
@@ -45,7 +57,7 @@ export function LodgingStructuredData({ accommodation }: { accommodation?: Accom
           streetAddress: siteConfig.address,
           addressLocality: siteConfig.locality,
           addressRegion: siteConfig.region,
-          addressCountry: "IT"
+          addressCountry: siteConfig.countryCode
         },
         telephone: siteConfig.phone,
         email: siteConfig.email,
@@ -55,5 +67,10 @@ export function LodgingStructuredData({ accommodation }: { accommodation?: Accom
         ]
       };
 
-  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }}
+    />
+  );
 }

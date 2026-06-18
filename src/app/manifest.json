@@ -1,6 +1,11 @@
 {
-  "name": "casa aurea",
+  "id": "/it",
+  "name": "Casa Aurea",
   "short_name": "Aurea",
+  "description": "Case vacanza boutique, ville e appartamenti per soggiorni autentici.",
+  "lang": "it",
+  "start_url": "/it",
+  "scope": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -15,7 +20,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "#171b14",
+  "background_color": "#f7f2e9",
   "display": "standalone"
 }

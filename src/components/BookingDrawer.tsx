@@ -2,7 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo, useState, useSyncExternalStore } from "react";
 import { createPortal } from "react-dom";
 import { useBookingState } from "@/components/BookingState";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
@@ -15,6 +15,8 @@ const weekdaysByLocale = {
   en: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   es: ["Lun", "Mar", "Mie", "Jue", "Vie", "Sab", "Dom"],
 };
+
+const emptySubscribe = () => () => {};
 
 export function BookingDrawer({
   accommodations,
@@ -31,7 +33,11 @@ export function BookingDrawer({
 }) {
   const { locale, t } = useLocaleCurrency();
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const mounted = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
   const [status, setStatus] = useState<DrawerStatus>("idle");
   const [calendarOffset, setCalendarOffset] = useState(0);
   const {
@@ -60,10 +66,6 @@ export function BookingDrawer({
     () => accommodations.find((item) => item.slug === activeSlug),
     [accommodations, activeSlug],
   );
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   function openDrawer() {
     if (selectedSlug) setSelectedSlug(selectedSlug);

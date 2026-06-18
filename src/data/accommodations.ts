@@ -63,11 +63,11 @@ export const accommodations: Accommodation[] = [
     priceFrom: 320,
     availability: "available",
     externalBookingUrl: "https://www.airbnb.com",
-    featuredImage: "/images/courtyard-pool.png",
+    featuredImage: "/images/courtyard-pool.webp",
     gallery: [
-      "/images/hero-pool-sea.png",
-      "/images/kitchen-sea.png",
-      "/images/stone-bath.png",
+      "/images/hero-pool-sea.webp",
+      "/images/kitchen-sea.webp",
+      "/images/stone-bath.webp",
     ],
     amenities: [
       "Piscina privata",
@@ -121,11 +121,11 @@ export const accommodations: Accommodation[] = [
     priceFrom: 145,
     availability: "request",
     externalBookingUrl: "https://www.booking.com",
-    featuredImage: "/images/suite-sea-bedroom.png",
+    featuredImage: "/images/suite-sea-bedroom.webp",
     gallery: [
-      "/images/suite-sea-bedroom.png",
-      "/images/vaulted-living.png",
-      "/images/stone-bath.png",
+      "/images/suite-sea-bedroom.webp",
+      "/images/vaulted-living.webp",
+      "/images/stone-bath.webp",
     ],
     amenities: [
       "Wi-Fi",
@@ -179,11 +179,11 @@ export const accommodations: Accommodation[] = [
     priceFrom: 210,
     availability: "unavailable",
     externalBookingUrl: "https://www.lodgify.com",
-    featuredImage: "/images/stone-entrance.png",
+    featuredImage: "/images/stone-entrance.webp",
     gallery: [
-      "/images/stone-entrance.png",
-      "/images/breakfast-sea.png",
-      "/images/clear-cove.png",
+      "/images/stone-entrance.webp",
+      "/images/breakfast-sea.webp",
+      "/images/clear-cove.webp",
     ],
     amenities: [
       "Terrazza vista mare",

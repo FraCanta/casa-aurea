@@ -40,7 +40,7 @@ export default function TerritoryPage() {
         </Reveal>
         <SoftScale className="relative mt-10 min-h-[360px] overflow-hidden md:mt-0 md:min-h-[560px]">
           <Image
-            src="/images/coast-town.png"
+            src="/images/coast-town.webp"
             alt={`Vista del territorio vicino a ${siteConfig.locality}`}
             fill
             priority
@@ -72,7 +72,7 @@ export default function TerritoryPage() {
       <section className="grid items-center gap-10 bg-paper px-6 py-20 md:grid-cols-[1.05fr_0.95fr] md:px-[88px] md:py-28 fxl:px-[140px] fxl:py-36">
         <SoftScale className="relative min-h-[360px] overflow-hidden md:min-h-[520px]">
           <Image
-            src="/images/clear-cove.png"
+            src="/images/clear-cove.webp"
             alt={`Mare e calette vicino a ${siteConfig.locality}`}
             fill
             sizes="(max-width: 900px) 100vw, 52vw"

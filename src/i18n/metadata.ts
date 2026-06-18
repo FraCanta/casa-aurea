@@ -13,9 +13,12 @@ export function localizedPath(locale: Locale, pathname: string) {
 export function localizedAlternates(lang: Locale, pathname: string) {
   return {
     canonical: localizedPath(lang, pathname),
-    languages: Object.fromEntries(
-      locales.map((locale) => [locale, localizedPath(locale, pathname)]),
-    ),
+    languages: {
+      ...Object.fromEntries(
+        locales.map((locale) => [locale, localizedPath(locale, pathname)]),
+      ),
+      "x-default": localizedPath("it", pathname),
+    },
   };
 }
 

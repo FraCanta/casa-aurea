@@ -7,6 +7,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useSyncExternalStore,
 } from "react";
 import type { CurrencyCode } from "@/lib/currency";
 import { fallbackExchangeRatesFromEur } from "@/lib/currency";
@@ -36,6 +37,38 @@ type LocaleCurrencyState = {
 };
 
 const LocaleCurrencyContext = createContext<LocaleCurrencyState | null>(null);
+const currencyStorageKey = "casa-aurea-currency";
+const currencyListeners = new Set<() => void>();
+
+function getCurrencySnapshot(): CurrencyCode {
+  const storedCurrency = window.localStorage.getItem(currencyStorageKey);
+  return storedCurrency && storedCurrency in fallbackExchangeRatesFromEur
+    ? (storedCurrency as CurrencyCode)
+    : "EUR";
+}
+
+function getServerCurrencySnapshot(): CurrencyCode {
+  return "EUR";
+}
+
+function subscribeToCurrency(listener: () => void) {
+  currencyListeners.add(listener);
+
+  function handleStorage(event: StorageEvent) {
+    if (event.key === currencyStorageKey) listener();
+  }
+
+  window.addEventListener("storage", handleStorage);
+  return () => {
+    currencyListeners.delete(listener);
+    window.removeEventListener("storage", handleStorage);
+  };
+}
+
+function persistCurrency(currency: CurrencyCode) {
+  window.localStorage.setItem(currencyStorageKey, currency);
+  currencyListeners.forEach((listener) => listener());
+}
 
 export function LocaleCurrencyProvider({
   children,
@@ -46,19 +79,15 @@ export function LocaleCurrencyProvider({
   locale: LocaleCode;
   messages: Dictionary;
 }) {
-  const [currency, setCurrency] = useState<CurrencyCode>("EUR");
+  const currency = useSyncExternalStore(
+    subscribeToCurrency,
+    getCurrencySnapshot,
+    getServerCurrencySnapshot,
+  );
   const [rates, setRates] = useState<Record<CurrencyCode, number>>(
     fallbackExchangeRatesFromEur,
   );
   const [ratesUpdatedAt, setRatesUpdatedAt] = useState<string | null>(null);
-
-  useEffect(() => {
-    const storedCurrency = window.localStorage.getItem("casa-aurea-currency") as CurrencyCode | null;
-
-    if (storedCurrency && storedCurrency in fallbackExchangeRatesFromEur) {
-      setCurrency(storedCurrency);
-    }
-  }, []);
 
   useEffect(() => {
     let ignore = false;
@@ -79,15 +108,11 @@ export function LocaleCurrencyProvider({
     };
   }, []);
 
-  useEffect(() => {
-    window.localStorage.setItem("casa-aurea-currency", currency);
-  }, [currency]);
-
   const value = useMemo<LocaleCurrencyState>(
     () => ({
       locale,
       currency,
-      setCurrency,
+      setCurrency: persistCurrency,
       t: (namespace, key) => String(messages[namespace][key] ?? key),
       formatPrice: (amountInEur, options) => {
         const converted = amountInEur * rates[currency];

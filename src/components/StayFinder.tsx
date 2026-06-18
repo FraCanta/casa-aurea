@@ -2,6 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { useMemo, useState } from "react";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import type { Accommodation } from "@/data/accommodations";
 
@@ -184,12 +185,12 @@ export function StayFinder({
             <p className="mt-4 text-white/70">
               {t("alloggi", `${result.slug}.claim` as never)}
             </p>
-            <a
+            <LocalizedLink
               className="btn btn-link mt-6 text-white"
               href={`/alloggi/${result.slug}`}
             >
               {t("pages", "finderDiscover")} <Icon icon="ph:arrow-right" />
-            </a>
+            </LocalizedLink>
           </div>
         )}
 

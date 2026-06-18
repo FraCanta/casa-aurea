@@ -2,6 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import {
@@ -9,6 +10,7 @@ import {
   LocaleCode,
   useLocaleCurrency,
 } from "@/components/LocaleCurrencyProvider";
+import { localeCookieName, localizePathname } from "@/i18n/routing";
 import { currencyLabels } from "@/lib/currency";
 
 const languages: Array<{
@@ -27,7 +29,9 @@ export function LanguageCurrencySelector({
 }: {
   mobile?: boolean;
 }) {
-  const { locale, currency, setLocale, setCurrency, t, ratesUpdatedAt } =
+  const router = useRouter();
+  const pathname = usePathname();
+  const { locale, currency, setCurrency, t, ratesUpdatedAt } =
     useLocaleCurrency();
   const [open, setOpen] = useState(false);
   const [draftLocale, setDraftLocale] = useState<LocaleCode>(locale);
@@ -40,9 +44,16 @@ export function LanguageCurrencySelector({
   }
 
   function saveSettings() {
-    setLocale(draftLocale);
     setCurrency(draftCurrency);
     setOpen(false);
+
+    if (draftLocale !== locale) {
+      document.cookie = `${localeCookieName}=${draftLocale}; Path=/; Max-Age=31536000; SameSite=Lax`;
+      const nextPathname = localizePathname(pathname, draftLocale);
+      router.replace(`${nextPathname}${window.location.search}${window.location.hash}`, {
+        scroll: false,
+      });
+    }
   }
 
   useEffect(() => {

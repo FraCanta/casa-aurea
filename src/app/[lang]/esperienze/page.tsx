@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { LocalizedText } from "@/components/LocalizedText";
 import { siteConfig } from "@/lib/site";
+import { createLocalizedMetadata, type LocalizedPageProps } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Esperienze",
-  description: `Esperienze, spiagge, borghi, degustazioni e itinerari per un soggiorno a ${siteConfig.locality}.`,
-};
+export async function generateMetadata({ params }: LocalizedPageProps): Promise<Metadata> {
+  const { lang } = await params;
+  return createLocalizedMetadata({ lang, pathname: "/esperienze", titleKey: "experiencesMetaTitle", descriptionKey: "experiencesMetaDescription" });
+}
 
 const experiences = [
   ["experienceOneTitle", "experienceOneText"],

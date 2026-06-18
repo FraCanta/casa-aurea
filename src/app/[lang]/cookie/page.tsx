@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { LocalizedText } from "@/components/LocalizedText";
+import { createLocalizedMetadata, type LocalizedPageProps } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Cookie Policy",
-  description: "Informativa cookie del sito per case vacanza, ville e appartamenti turistici.",
-};
+export async function generateMetadata({ params }: LocalizedPageProps): Promise<Metadata> {
+  const { lang } = await params;
+  return createLocalizedMetadata({ lang, pathname: "/cookie", titleKey: "cookieMetaTitle", descriptionKey: "cookieMetaDescription" });
+}
 
 export default function CookiePage() {
   return (

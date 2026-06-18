@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react";
-import Link from "next/link";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import { accommodations } from "@/data/accommodations";
 import { navigation, siteConfig } from "@/lib/site";
@@ -22,14 +22,14 @@ export function Footer() {
       <div className="mx-auto px-6 py-14 md:px-22 md:py-18 fxl:px-35 fxl:py-14">
         <div className="grid gap-12 border-b border-white/10 pb-12 lg:grid-cols-[1.25fr_.7fr_.95fr_.8fr_1fr] lg:gap-10 fxl:gap-16">
           <div>
-            <Link href="/" className="inline-grid gap-2">
+            <LocalizedLink href="/" className="inline-grid gap-2">
               <span className="font-serif text-[1rem] font-medium uppercase leading-none tracking-[0.23em]">
                 {siteConfig.name}
               </span>
               <span className="font-sans text-[0.52rem] font-extrabold uppercase tracking-[0.34em] text-white/45">
                 {t("common", "brandSubtitle")}
               </span>
-            </Link>
+            </LocalizedLink>
             <p className="mt-8 font-serif text-base font-normal text-white fxl:text-lg">
               {t("common", "footerClaim")}
             </p>
@@ -51,9 +51,9 @@ export function Footer() {
               {t("common", "footerMenu")}
             </p>
             {navigation.map((item) => (
-              <Link className="mb-2 block text-[0.9rem] leading-6 text-white/72 transition-colors hover:text-white" href={item.href} key={item.href}>
+              <LocalizedLink className="mb-2 block text-[0.9rem] leading-6 text-white/72 transition-colors hover:text-white" href={item.href} key={item.href}>
                 {t("common", navLabelKeys[item.href] ?? "navStays")}
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
 
@@ -62,9 +62,9 @@ export function Footer() {
               {t("common", "footerStays")}
             </p>
             {accommodations.map((item) => (
-              <Link className="mb-2 block text-[0.9rem] leading-6 text-white/72 transition-colors hover:text-white" key={item.slug} href={`/alloggi/${item.slug}`}>
+              <LocalizedLink className="mb-2 block text-[0.9rem] leading-6 text-white/72 transition-colors hover:text-white" key={item.slug} href={`/alloggi/${item.slug}`}>
                 {item.name}
-              </Link>
+              </LocalizedLink>
             ))}
           </div>
 
@@ -111,12 +111,12 @@ export function Footer() {
             © 2026 {siteConfig.name}. {siteConfig.companyName} - {siteConfig.vatNumber} - CIN {siteConfig.cin} - CIR {siteConfig.cir}
           </p>
           <div className="flex gap-5">
-            <Link className="transition-colors hover:text-white/70" href="/privacy">
+            <LocalizedLink className="transition-colors hover:text-white/70" href="/privacy">
               Privacy Policy
-            </Link>
-            <Link className="transition-colors hover:text-white/70" href="/cookie">
+            </LocalizedLink>
+            <LocalizedLink className="transition-colors hover:text-white/70" href="/cookie">
               Cookie Policy
-            </Link>
+            </LocalizedLink>
           </div>
         </div>
       </div>

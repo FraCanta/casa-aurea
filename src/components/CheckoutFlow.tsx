@@ -1,10 +1,10 @@
 "use client";
 
 import { Icon } from "@iconify/react";
-import Link from "next/link";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useBookingState } from "@/components/BookingState";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import type { Accommodation } from "@/data/accommodations";
 import { siteConfig } from "@/lib/site";
 
@@ -82,10 +82,10 @@ export function CheckoutFlow({
             {t("common", "checkoutIntro")}
           </p>
         </div>
-        <Link className="btn btn-secondary" href={`/alloggi/${accommodation.slug}`}>
+        <LocalizedLink className="btn btn-secondary" href={`/alloggi/${accommodation.slug}`}>
           <Icon icon="ph:arrow-left" />
           {t("common", "back")}
-        </Link>
+        </LocalizedLink>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-[1fr_430px] lg:gap-8">

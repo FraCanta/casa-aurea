@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { LocalizedText } from "@/components/LocalizedText";
 import {
   Reveal,
@@ -10,11 +10,12 @@ import {
   StaggerReveal,
 } from "@/components/Motion";
 import { siteConfig } from "@/lib/site";
+import { createLocalizedMetadata, type LocalizedPageProps } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Il Territorio",
-  description: `Territorio, mare, borghi e campagne intorno a ${siteConfig.locality}.`,
-};
+export async function generateMetadata({ params }: LocalizedPageProps): Promise<Metadata> {
+  const { lang } = await params;
+  return createLocalizedMetadata({ lang, pathname: "/territorio", titleKey: "territoryMetaTitle", descriptionKey: "territoryMetaDescription" });
+}
 
 const places = [
   ["territoryPlaceOneTitle", "territoryPlaceOneText"],
@@ -88,12 +89,12 @@ export default function TerritoryPage() {
           <p className="mt-6 text-base leading-7 text-muted">
             <LocalizedText namespace="pages" label="territoryItinerariesText" />
           </p>
-          <Link
+          <LocalizedLink
             href="/esperienze"
             className="mt-7 inline-flex items-center gap-3 text-[0.68rem] font-black uppercase tracking-[0.13em]"
           >
             <LocalizedText namespace="home" label="experiencesCta" /> <Icon icon="ph:arrow-right" />
-          </Link>
+          </LocalizedLink>
         </Reveal>
       </section>
     </main>

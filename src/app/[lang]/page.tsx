@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import Image from "next/image";
-import Link from "next/link";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { HeroBookingPanel } from "@/components/HeroBookingPanel";
 import {
   Reveal,
@@ -72,10 +72,10 @@ export default function HomePage() {
           <p className="mt-6 text-base  text-[#5d5a50]">
             <LocalizedText namespace="home" label="philosophyText" />
           </p>
-          <Link href="/chi-siamo" className="btn btn-link mt-7 text-[#171b14]">
+          <LocalizedLink href="/chi-siamo" className="btn btn-link mt-7 text-[#171b14]">
             <LocalizedText namespace="home" label="learnMore" />{" "}
             <Icon icon="ph:arrow-right" />
-          </Link>
+          </LocalizedLink>
         </Reveal>
         <SoftScale className="relative overflow-hidden min-h-75 md:min-h-115">
           <Image
@@ -98,10 +98,10 @@ export default function HomePage() {
               <LocalizedText namespace="home" label="staysTitle" />
             </h2>
           </div>
-          <Link href="/alloggi" className="btn btn-link text-[#171b14]">
+          <LocalizedLink href="/alloggi" className="btn btn-link text-[#171b14]">
             <LocalizedText namespace="home" label="viewAll" />{" "}
             <Icon icon="ph:arrow-right" />
-          </Link>
+          </LocalizedLink>
         </div>
         <StaggerReveal className="grid gap-5 md:grid-cols-3">
           {stays.map((stay) => (
@@ -117,7 +117,7 @@ export default function HomePage() {
                   sizes="(max-width: 900px) 100vw, 31vw"
                 />
               </div>
-              <Link
+              <LocalizedLink
                 className="flex flex-col p-5 gap-x-4 gap-y-2"
                 href={`/alloggi/${stay.slug}`}
               >
@@ -157,7 +157,7 @@ export default function HomePage() {
                     <Icon icon="ph:arrow-right" />
                   </small>
                 </div>
-              </Link>
+              </LocalizedLink>
             </StaggerItem>
           ))}
         </StaggerReveal>
@@ -184,10 +184,10 @@ export default function HomePage() {
           <p className="mt-6 text-base leading-7 text-[#5d5a50]">
             <LocalizedText namespace="home" label="experiencesText" />
           </p>
-          <Link href="/esperienze" className="btn btn-link mt-7 text-[#171b14]">
+          <LocalizedLink href="/esperienze" className="btn btn-link mt-7 text-[#171b14]">
             <LocalizedText namespace="home" label="experiencesCta" />{" "}
             <Icon icon="ph:arrow-right" />
-          </Link>
+          </LocalizedLink>
         </Reveal>
         <StaggerReveal className="grid mt-10 gap-7 md:col-span-2 md:grid-cols-5">
           {experienceItems.map(([title, text]) => (

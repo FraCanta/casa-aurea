@@ -3,11 +3,12 @@ import { BookingForm } from "@/components/BookingForm";
 import { LocalizedText } from "@/components/LocalizedText";
 import { accommodations } from "@/data/accommodations";
 import { siteConfig } from "@/lib/site";
+import { createLocalizedMetadata, type LocalizedPageProps } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Contatti",
-  description: `Contatta ${siteConfig.name} per una casa vacanza a ${siteConfig.locality}, una villa in affitto o un appartamento turistico vicino al mare, al centro storico o alla campagna.`,
-};
+export async function generateMetadata({ params }: LocalizedPageProps): Promise<Metadata> {
+  const { lang } = await params;
+  return createLocalizedMetadata({ lang, pathname: "/contatti", titleKey: "contactMetaTitle", descriptionKey: "contactMetaDescription" });
+}
 
 export default function ContactPage() {
   return (

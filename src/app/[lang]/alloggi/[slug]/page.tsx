@@ -10,6 +10,9 @@ import { MobileAccommodationBar } from "@/components/MobileAccommodationBar";
 import { Reveal, SoftScale, StaggerItem, StaggerReveal } from "@/components/Motion";
 import { LodgingStructuredData } from "@/components/StructuredData";
 import { accommodations, getAccommodation } from "@/data/accommodations";
+import { getDictionary } from "@/i18n/dictionaries";
+import { localizedAlternates, localizedPath } from "@/i18n/metadata";
+import { hasLocale } from "@/i18n/routing";
 import { siteConfig } from "@/lib/site";
 
 const accommodationFaqs = [
@@ -32,7 +35,7 @@ const accommodationFaqs = [
 ];
 
 type PageProps = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ lang: string; slug: string }>;
   searchParams?: Promise<{
     checkin?: string;
     checkout?: string;
@@ -47,24 +50,29 @@ export function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
+  const { lang, slug } = await params;
   const accommodation = getAccommodation(slug);
 
-  if (!accommodation) {
+  if (!accommodation || !hasLocale(lang)) {
     return {};
   }
 
+  const dictionary = await getDictionary(lang);
+  const type = dictionary.alloggi[`${accommodation.slug}.type`] ?? accommodation.type;
+  const summary = dictionary.alloggi[`${accommodation.slug}.summary`] ?? accommodation.summary;
+  const pathname = `/alloggi/${accommodation.slug}`;
+  const title = `${accommodation.name} | ${type}`;
+
   return {
-    title: `${accommodation.name} | ${accommodation.type} vicino a ${siteConfig.locality}`,
-    description: `${accommodation.name}: ${accommodation.summary} Casa vacanza, villa in affitto o appartamento turistico a ${siteConfig.locality} con gallery, servizi e CTA prenotazione.`,
-    alternates: {
-      canonical: `/alloggi/${accommodation.slug}`,
-    },
+    title,
+    description: summary,
+    alternates: localizedAlternates(lang, pathname),
     openGraph: {
-      title: `${accommodation.name} - ${accommodation.type}`,
-      description: accommodation.summary,
+      title,
+      description: summary,
       images: [accommodation.featuredImage],
       type: "website",
+      url: localizedPath(lang, pathname),
     },
   };
 }

@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
 import { CheckoutFlow } from "@/components/CheckoutFlow";
 import { accommodations, getAccommodation } from "@/data/accommodations";
+import { createLocalizedMetadata } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Checkout soggiorno | Casa Aurea",
-  description:
-    "Checkout dimostrativo per richiesta disponibilità o pagamento simulato di una casa vacanza boutique.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ lang: string }> }): Promise<Metadata> {
+  const { lang } = await params;
+  return createLocalizedMetadata({
+    lang,
+    pathname: "/checkout",
+    titleKey: "checkoutMetaTitle",
+    descriptionKey: "checkoutMetaDescription",
+    index: false,
+  });
+}
 
 type CheckoutPageProps = {
   searchParams?: Promise<{

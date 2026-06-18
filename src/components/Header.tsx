@@ -2,10 +2,10 @@
 
 import { Icon } from "@iconify/react";
 import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { LanguageCurrencySelector } from "@/components/LanguageCurrencySelector";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import { navigation, siteConfig } from "@/lib/site";
 
@@ -18,11 +18,11 @@ const navLabelKeys: Record<string, "navStays" | "navExperiences" | "navTerritory
 };
 
 export function Header() {
-  const { t } = useLocaleCurrency();
+  const { locale, t } = useLocaleCurrency();
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
-  const isHomeTop = pathname === "/" && !scrolled;
+  const isHomeTop = pathname === `/${locale}` && !scrolled;
   const isLight = !isHomeTop;
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export function Header() {
           : "bg-transparent text-white"
       }`}
     >
-      <Link
+      <LocalizedLink
         href="/"
         className="grid gap-1 leading-none"
         aria-label={`${siteConfig.name} home`}
@@ -62,20 +62,20 @@ export function Header() {
         >
           {t("common", "brandSubtitle")}
         </span>
-      </Link>
+      </LocalizedLink>
 
       <nav
         className="hidden justify-center gap-9 text-[0.75rem] font-extrabold uppercase tracking-[0.13em] lg:flex fxl:gap-14"
         aria-label={t("common", "mainNavigation")}
       >
         {navigation.map((item) => (
-          <Link
+          <LocalizedLink
             key={item.href}
             href={item.href}
             className="transition-opacity hover:opacity-65"
           >
             {t("common", navLabelKeys[item.href] ?? "navStays")}
-          </Link>
+          </LocalizedLink>
         ))}
       </nav>
 
@@ -116,7 +116,7 @@ export function Header() {
               transition={{ duration: 0.48, ease: [0.22, 1, 0.36, 1] }}
             >
               <div className="mb-12 flex items-start justify-between gap-6">
-                <Link
+                <LocalizedLink
                   href="/"
                   className="grid gap-1 leading-none"
                   onClick={() => setIsOpen(false)}
@@ -127,7 +127,7 @@ export function Header() {
                   <span className="font-sans text-[0.5rem] font-extrabold uppercase tracking-[0.38em] text-ink/55">
                     {t("common", "brandSubtitle")}
                   </span>
-                </Link>
+                </LocalizedLink>
                 <button
                   type="button"
                   className="grid h-10 w-10 place-items-center border border-ink/10"
@@ -140,14 +140,14 @@ export function Header() {
 
               <div className="grid gap-1 text-[0.86rem] font-black uppercase tracking-[0.12em]">
                 {navigation.map((item) => (
-                  <Link
+                  <LocalizedLink
                     key={item.href}
                     href={item.href}
                     className="border-b border-ink/10 py-4"
                     onClick={() => setIsOpen(false)}
                   >
                     {t("common", navLabelKeys[item.href] ?? "navStays")}
-                  </Link>
+                  </LocalizedLink>
                 ))}
               </div>
               <div className="mt-8">

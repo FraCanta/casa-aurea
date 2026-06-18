@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { LocalizedText } from "@/components/LocalizedText";
+import { createLocalizedMetadata, type LocalizedPageProps } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Privacy Policy",
-  description: "Informativa privacy del sito e gestione delle richieste di soggiorno.",
-};
+export async function generateMetadata({ params }: LocalizedPageProps): Promise<Metadata> {
+  const { lang } = await params;
+  return createLocalizedMetadata({ lang, pathname: "/privacy", titleKey: "privacyMetaTitle", descriptionKey: "privacyMetaDescription" });
+}
 
 export default function PrivacyPage() {
   return (

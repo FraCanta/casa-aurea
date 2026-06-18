@@ -8,32 +8,13 @@ import {
   useMemo,
   useState,
 } from "react";
-import itCommon from "../../locales/it/common.json";
-import itHome from "../../locales/it/home.json";
-import itAlloggi from "../../locales/it/alloggi.json";
-import itCheckout from "../../locales/it/checkout.json";
-import itPages from "../../locales/it/pages.json";
-import enCommon from "../../locales/en/common.json";
-import enHome from "../../locales/en/home.json";
-import enAlloggi from "../../locales/en/alloggi.json";
-import enCheckout from "../../locales/en/checkout.json";
-import enPages from "../../locales/en/pages.json";
-import esCommon from "../../locales/es/common.json";
-import esHome from "../../locales/es/home.json";
-import esAlloggi from "../../locales/es/alloggi.json";
-import esCheckout from "../../locales/es/checkout.json";
-import esPages from "../../locales/es/pages.json";
 import type { CurrencyCode } from "@/lib/currency";
 import { fallbackExchangeRatesFromEur } from "@/lib/currency";
+import type { Dictionary } from "@/i18n/dictionaries";
+import type { Locale } from "@/i18n/routing";
 
-export type LocaleCode = "it" | "en" | "es";
+export type LocaleCode = Locale;
 export type { CurrencyCode } from "@/lib/currency";
-
-const messages = {
-  it: { common: itCommon, home: itHome, alloggi: itAlloggi, checkout: itCheckout, pages: itPages },
-  en: { common: enCommon, home: enHome, alloggi: enAlloggi, checkout: enCheckout, pages: enPages },
-  es: { common: esCommon, home: esHome, alloggi: esAlloggi, checkout: esCheckout, pages: esPages },
-};
 
 const localeFormatMap: Record<LocaleCode, string> = {
   it: "it-IT",
@@ -41,14 +22,13 @@ const localeFormatMap: Record<LocaleCode, string> = {
   es: "es-ES",
 };
 
-type Namespace = keyof typeof messages.it;
-type MessageKey<N extends Namespace> = keyof (typeof messages.it)[N];
+type Namespace = keyof Dictionary;
+type MessageKey<N extends Namespace> = keyof Dictionary[N];
 export type AlloggiMessageKey = MessageKey<"alloggi">;
 
 type LocaleCurrencyState = {
   locale: LocaleCode;
   currency: CurrencyCode;
-  setLocale: (value: LocaleCode) => void;
   setCurrency: (value: CurrencyCode) => void;
   t: <N extends Namespace>(namespace: N, key: MessageKey<N>) => string;
   formatPrice: (amountInEur: number, options?: { maximumFractionDigits?: number }) => string;
@@ -57,8 +37,15 @@ type LocaleCurrencyState = {
 
 const LocaleCurrencyContext = createContext<LocaleCurrencyState | null>(null);
 
-export function LocaleCurrencyProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocale] = useState<LocaleCode>("it");
+export function LocaleCurrencyProvider({
+  children,
+  locale,
+  messages,
+}: {
+  children: ReactNode;
+  locale: LocaleCode;
+  messages: Dictionary;
+}) {
   const [currency, setCurrency] = useState<CurrencyCode>("EUR");
   const [rates, setRates] = useState<Record<CurrencyCode, number>>(
     fallbackExchangeRatesFromEur,
@@ -66,10 +53,8 @@ export function LocaleCurrencyProvider({ children }: { children: ReactNode }) {
   const [ratesUpdatedAt, setRatesUpdatedAt] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedLocale = window.localStorage.getItem("casa-aurea-locale") as LocaleCode | null;
     const storedCurrency = window.localStorage.getItem("casa-aurea-currency") as CurrencyCode | null;
 
-    if (storedLocale && storedLocale in messages) setLocale(storedLocale);
     if (storedCurrency && storedCurrency in fallbackExchangeRatesFromEur) {
       setCurrency(storedCurrency);
     }
@@ -95,17 +80,15 @@ export function LocaleCurrencyProvider({ children }: { children: ReactNode }) {
   }, []);
 
   useEffect(() => {
-    window.localStorage.setItem("casa-aurea-locale", locale);
     window.localStorage.setItem("casa-aurea-currency", currency);
-  }, [currency, locale]);
+  }, [currency]);
 
   const value = useMemo<LocaleCurrencyState>(
     () => ({
       locale,
       currency,
-      setLocale,
       setCurrency,
-      t: (namespace, key) => String(messages[locale][namespace][key] ?? key),
+      t: (namespace, key) => String(messages[namespace][key] ?? key),
       formatPrice: (amountInEur, options) => {
         const converted = amountInEur * rates[currency];
         return new Intl.NumberFormat(localeFormatMap[locale], {
@@ -116,7 +99,7 @@ export function LocaleCurrencyProvider({ children }: { children: ReactNode }) {
       },
       ratesUpdatedAt,
     }),
-    [currency, locale, rates, ratesUpdatedAt],
+    [currency, locale, messages, rates, ratesUpdatedAt],
   );
 
   return (

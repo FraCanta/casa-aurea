@@ -1,7 +1,7 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Icon } from "@iconify/react";
 import type { Accommodation } from "@/data/accommodations";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { LocalizedText } from "@/components/LocalizedText";
 import { PriceText } from "@/components/PriceText";
 
@@ -14,7 +14,7 @@ const availabilityLabel = {
 export function AccommodationCard({ accommodation }: { accommodation: Accommodation }) {
   return (
     <article className="grid items-end gap-8 md:grid-cols-[1.08fr_0.92fr] md:gap-14 fxl:gap-20">
-      <Link className="relative min-h-[330px] overflow-hidden md:min-h-[560px]" href={`/alloggi/${accommodation.slug}`}>
+      <LocalizedLink className="relative min-h-[330px] overflow-hidden md:min-h-[560px]" href={`/alloggi/${accommodation.slug}`}>
         <Image
           src={accommodation.featuredImage}
           alt={`${accommodation.name}, ${accommodation.type} a ${accommodation.location}`}
@@ -22,7 +22,7 @@ export function AccommodationCard({ accommodation }: { accommodation: Accommodat
           sizes="(max-width: 900px) 100vw, 58vw"
           className="object-cover transition-transform duration-700 hover:scale-[1.03]"
         />
-      </Link>
+      </LocalizedLink>
       <div className="pb-4">
         <p className="mb-4 text-[0.68rem] font-black uppercase tracking-[0.16em] text-olive">
           <LocalizedText namespace="alloggi" label={`${accommodation.slug}.type`} />
@@ -60,10 +60,10 @@ export function AccommodationCard({ accommodation }: { accommodation: Accommodat
               label={availabilityLabel[accommodation.availability]}
             />
           </span>
-          <Link className="btn btn-link text-olive" href={`/alloggi/${accommodation.slug}`}>
+          <LocalizedLink className="btn btn-link text-olive" href={`/alloggi/${accommodation.slug}`}>
             <LocalizedText namespace="alloggi" label="explore" />
             <Icon icon="ph:arrow-right" />
-          </Link>
+          </LocalizedLink>
         </div>
       </div>
     </article>

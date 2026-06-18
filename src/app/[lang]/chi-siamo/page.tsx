@@ -9,11 +9,12 @@ import {
   StaggerReveal,
 } from "@/components/Motion";
 import { siteConfig } from "@/lib/site";
+import { createLocalizedMetadata, type LocalizedPageProps } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: "Chi Siamo",
-  description: `La filosofia di ${siteConfig.name}: ospitalità autentica, design e cura dei dettagli.`,
-};
+export async function generateMetadata({ params }: LocalizedPageProps): Promise<Metadata> {
+  const { lang } = await params;
+  return createLocalizedMetadata({ lang, pathname: "/chi-siamo", titleKey: "aboutMetaTitle", descriptionKey: "aboutMetaDescription" });
+}
 
 const values = [
   ["aboutValueOneTitle", "aboutValueOneText"],

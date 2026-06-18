@@ -7,6 +7,7 @@ import { BookingDrawer } from "@/components/BookingDrawer";
 import { useBookingState } from "@/components/BookingState";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import type { Accommodation } from "@/data/accommodations";
+import { localizeHref } from "@/i18n/routing";
 
 type AvailabilityUi =
   | "idle"
@@ -21,7 +22,7 @@ export function HeroBookingPanel({
   accommodations: Accommodation[];
 }) {
   const router = useRouter();
-  const { t } = useLocaleCurrency();
+  const { locale, t } = useLocaleCurrency();
   const [status, setStatus] = useState<AvailabilityUi>("idle");
   const {
     checkin,
@@ -46,22 +47,22 @@ export function HeroBookingPanel({
 
     if (selectedAccommodation.availability === "available") {
       setStatus("available");
-      router.push(buildAccommodationUrl(activeSlug, checkin, checkout, guests));
+      router.push(localizeHref(buildAccommodationUrl(activeSlug, checkin, checkout, guests), locale));
       return;
     }
 
     if (selectedAccommodation.availability === "unavailable") {
       setStatus("unavailable");
-      router.push(buildAccommodationUrl(activeSlug, checkin, checkout, guests));
+      router.push(localizeHref(buildAccommodationUrl(activeSlug, checkin, checkout, guests), locale));
       return;
     }
 
     setStatus("request");
-    router.push(buildAccommodationUrl(activeSlug, checkin, checkout, guests));
+    router.push(localizeHref(buildAccommodationUrl(activeSlug, checkin, checkout, guests), locale));
   }
 
   function continueToAccommodation(slug: string) {
-    router.push(buildAccommodationUrl(slug, checkin, checkout, guests));
+    router.push(localizeHref(buildAccommodationUrl(slug, checkin, checkout, guests), locale));
   }
 
   const statusText = {

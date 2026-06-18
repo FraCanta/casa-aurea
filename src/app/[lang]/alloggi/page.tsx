@@ -3,12 +3,17 @@ import { AccommodationCard } from "@/components/AccommodationCard";
 import { LocalizedText } from "@/components/LocalizedText";
 import { Reveal, StaggerItem, StaggerReveal } from "@/components/Motion";
 import { accommodations } from "@/data/accommodations";
-import { siteConfig } from "@/lib/site";
+import { createLocalizedMetadata, type LocalizedPageProps } from "@/i18n/metadata";
 
-export const metadata: Metadata = {
-  title: `Alloggi | Case vacanza, ville e appartamenti vicino a ${siteConfig.locality}`,
-  description: `Scopri case vacanza, ville in affitto e appartamenti vacanze per un soggiorno vicino a ${siteConfig.locality}.`,
-};
+export async function generateMetadata({ params }: LocalizedPageProps): Promise<Metadata> {
+  const { lang } = await params;
+  return createLocalizedMetadata({
+    lang,
+    pathname: "/alloggi",
+    titleKey: "alloggiMetaTitle",
+    descriptionKey: "alloggiMetaDescription",
+  });
+}
 
 export default function AccommodationsPage() {
   return (

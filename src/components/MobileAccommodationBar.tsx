@@ -1,8 +1,8 @@
 "use client";
 
 import { Icon } from "@iconify/react";
-import Link from "next/link";
 import { BookingDrawer } from "@/components/BookingDrawer";
+import { LocalizedLink } from "@/components/LocalizedLink";
 import { useBookingState } from "@/components/BookingState";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import type { Accommodation } from "@/data/accommodations";
@@ -38,12 +38,12 @@ export function MobileAccommodationBar({
           </p>
         </div>
         {hasSearch ? (
-          <Link
+          <LocalizedLink
             className="btn btn-primary shrink-0 !text-white"
             href={buildCheckoutUrl(accommodation.slug, checkin, checkout, guests)}
           >
             {t("common", "continue")}
-          </Link>
+          </LocalizedLink>
         ) : (
           <BookingDrawer
             accommodations={accommodations}

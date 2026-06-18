@@ -8,6 +8,7 @@ import { useBookingState } from "@/components/BookingState";
 import { LocalizedText } from "@/components/LocalizedText";
 import { useLocaleCurrency } from "@/components/LocaleCurrencyProvider";
 import type { Accommodation } from "@/data/accommodations";
+import { localizeHref } from "@/i18n/routing";
 
 export function AccommodationBookingCard({
   accommodation,
@@ -17,7 +18,7 @@ export function AccommodationBookingCard({
   accommodations: Accommodation[];
 }) {
   const router = useRouter();
-  const { formatPrice, t } = useLocaleCurrency();
+  const { formatPrice, locale, t } = useLocaleCurrency();
   const [status, setStatus] = useState<"idle" | "sent">("idle");
   const {
     selectedSlug,
@@ -117,7 +118,10 @@ export function AccommodationBookingCard({
           onClick={() => {
             setStatus("sent");
             router.push(
-              buildCheckoutUrl(accommodation.slug, checkin, checkout, guests),
+              localizeHref(
+                buildCheckoutUrl(accommodation.slug, checkin, checkout, guests),
+                locale,
+              ),
             );
           }}
         >
